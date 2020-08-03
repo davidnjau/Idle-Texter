@@ -19,14 +19,19 @@ class FetchDatabase {
 //    private val myListMessageIds: ArrayList<String> = ArrayList()
     private val myListMessageIds: MutableList<String> = ArrayList()
 
-    fun CheckPhoneNumber (number : String, context: Context): Pair<String, Boolean> {
+    fun CheckPhoneNumber (number : String, time:String, context: Context): Pair<String, Boolean> {
 
         databaseHelper = DatabaseHelper(context)
 
         val db = databaseHelper.readableDatabase
 
-        val cursor: Cursor = db.rawQuery("select * from " + "${DatabaseHelper.TABLE_MISSED_CALLS}"
-                + " WHERE " + "${DatabaseHelper.KEY_PHONE_NUMBER}" + "='" + number + "'", null)
+//        val cursor: Cursor = db.rawQuery("select * from " + DatabaseHelper.TABLE_MISSED_CALLS
+//                + " WHERE " + DatabaseHelper.KEY_PHONE_NUMBER + "='" + number + "'", null)
+
+        val cursor: Cursor = db.rawQuery("SELECT * FROM "
+                + DatabaseHelper.TABLE_MISSED_CALLS + " WHERE "
+                + DatabaseHelper.KEY_PHONE_NUMBER + "=?" + " AND "
+                + DatabaseHelper.KEY_TIME + "=?", arrayOf(number, time))
 
         if (cursor != null){
 

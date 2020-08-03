@@ -4,8 +4,8 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.provider.Settings
 import android.view.View
 import android.widget.Button
@@ -13,19 +13,20 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.centafrique.textsender.Database.DatabaseHelper
 import com.centafrique.textsender.R
 import com.centafrique.textsender.fragments.FragmentMessages
 import com.centafrique.textsender.fragments.FragmentMissedCalls
-import java.util.jar.Manifest
 
 class Main2Activity : AppCompatActivity() {
 
     private val fragmentManager = supportFragmentManager
     private val fragmentMessages = FragmentMessages()
     private val fragmentMissedCalls = FragmentMissedCalls()
+    private lateinit var cdt: CountDownTimer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +39,7 @@ class Main2Activity : AppCompatActivity() {
         val btnMessages : Button = findViewById(R.id.btnMessages)
 
         val databaseHelper = DatabaseHelper(applicationContext)
-        if (databaseHelper.getCount()>=7){
+        if (databaseHelper.getCount()>=1200){
 
 //            myview.visibility = View.VISIBLE
 //            btnMissedCalls.visibility = View.GONE
@@ -46,10 +47,30 @@ class Main2Activity : AppCompatActivity() {
 //
 //            mainPage.isEnabled = false
 
+            cdt = object : CountDownTimer(3000, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+
+                }override fun onFinish() {
+
+                    val intent = Intent(this@Main2Activity, Payment::class.java)
+                    startActivity(intent)
+                    finish()
+
+
+                }
+            }
+
+            cdt.start()
+
+            Toast.makeText(this, "Complete your payment first",
+                    Toast.LENGTH_SHORT).show()
+
+
         }else{
 
-//            myview.visibility = View.GONE
-//            mainPage.isEnabled = true
+            myview.visibility = View.GONE
+            mainPage.isEnabled = true
+
         }
 
 

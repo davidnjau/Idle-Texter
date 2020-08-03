@@ -6,4 +6,20 @@
     <string name="send_text_maina">You attempted to call Dave but I could not receive your call. I will call you as soon as possible. Keep safe.</string>
     <string name="ig_acc">https://instagram.com/nimonaturals?igshid=lktxo918p0wp</string>
 
+    <string name="silver">Silver \nPayment Plan</string>
+    <string name="bronze">Bronze \nPayment Plan</string>
+    <string name="gold">Gold \nPayment Plan</string>
+    <string name="premium">Premium \nPayment Plan</string>
+
+    <string name="payment_instructions">1. Go to the M-pesa Menu.\n
+    2. Select Send money.\n
+    3. Enter Phone number +254 716 060198.\n
+    4. Enter the Amount.\n
+    5. Enter your M-Pesa PIN then send.</string>
+
+    <string name="silver_plan">Get 200 sms for 500 Kshs</string>
+    <string name="bronze_plan">Get 500 sms for 750 Kshs</string>
+    <string name="gold_plan">Get 750 sms for 1000 Kshs</string>
+    <string name="premium_plan">Get 1000 sms + 500 free sms for 1200 Kshs</string>
+
 </resources>

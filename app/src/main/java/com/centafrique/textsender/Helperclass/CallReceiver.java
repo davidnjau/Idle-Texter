@@ -41,7 +41,7 @@ public class CallReceiver extends BroadcastReceiver {
     ITelephony telephonyService;
 
     private DatabaseHelper databaseHelper;
-    private SimpleDateFormat dateTimeFormatter;
+    private SimpleDateFormat dateTimeFormatter1,dateTimeFormatter;
 
     FetchDatabase fetchDatabase;
 
@@ -122,18 +122,19 @@ public class CallReceiver extends BroadcastReceiver {
                                     try{
 
                                         dateTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                                        dateTimeFormatter1 = new SimpleDateFormat("dd/MM/yyyy");
                                         Date date = new Date();
                                         databaseHelper = new DatabaseHelper(context);
                                         fetchDatabase = new FetchDatabase();
 
-                                        if (databaseHelper.getCount() <1000){
+                                        if (databaseHelper.getCount() <200){
 
                                             Log.e("--*-* " , String.valueOf(databaseHelper.getCount()));
 
                                             String txtMessage = fetchDatabase.getMessage(context);
                                             if (txtMessage.equals("false")){
 
-                                                txtToSend = context.getString(R.string.send_text) + "\n \nVia Idle Texter";
+                                                txtToSend = context.getString(R.string.send_text_default) + "\n \nVia Idle Texter";
 
 
                                             }else {
@@ -142,10 +143,10 @@ public class CallReceiver extends BroadcastReceiver {
 
                                             }
 
-                                            String currentTime = dateTimeFormatter.format(date);
+                                            String currentTime = dateTimeFormatter1.format(date);
 
-                                            boolean isThere = fetchDatabase.CheckPhoneNumber(lastCallnumber, context).getSecond();
-                                            String txtId = fetchDatabase.CheckPhoneNumber(lastCallnumber, context).getFirst();
+                                            boolean isThere = fetchDatabase.CheckPhoneNumber(lastCallnumber,currentTime, context).getSecond();
+                                            String txtId = fetchDatabase.CheckPhoneNumber(lastCallnumber,currentTime, context).getFirst();
 
                                             if (isThere){
 

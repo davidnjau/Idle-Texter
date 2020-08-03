@@ -24,7 +24,7 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, 
 
         val KEY_PHONE_NUMBER = "phone_number"
         val KEY_NUMBER_CALLS = "calls_number"
-        private val KEY_TIME = "time"
+        val KEY_TIME = "time"
 
         val TABLE_MESSAGES = "messages"
 
@@ -44,6 +44,7 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, 
                 + KEY_PHONE_NUMBER + " TEXT,"
                 + KEY_NUMBER_CALLS + " TEXT, "
                 + KEY_TIME + " TEXT" + ")")
+
         val CREATE_TABLE_MESSAGES = ("CREATE TABLE " + TABLE_MESSAGES + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_STATUS + " TEXT, "

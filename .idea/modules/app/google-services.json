@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "498904257614",
+    "firebase_url": "https://textsender-ba472.firebaseio.com",
+    "project_id": "textsender-ba472",
+    "storage_bucket": "textsender-ba472.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:498904257614:android:5b625d1eb3c15441769f1f",
+        "android_client_info": {
+          "package_name": "com.centafrique.textsender"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "498904257614-24nkj6dlcbdbail53equi76mac84ests.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.centafrique.textsender",
+            "certificate_hash": "2f9fd52d23cb46fb88212ada8dd18c8aecd2f5bd"
+          }
+        },
+        {
+          "client_id": "498904257614-nir4i202me3sj1pgpnai0nf0nkg76jh2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdwIUn7cAq450Dt3GUdygaIiM4cPGbjCQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "498904257614-nir4i202me3sj1pgpnai0nf0nkg76jh2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -21,6 +21,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.ProviderQueryResult;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -59,16 +61,35 @@ public class Register extends AppCompatActivity {
                 progressDialog.setMessage("Please wait as you're being registered.");
                 progressDialog.setCanceledOnTouchOutside(false);
 
-                String txtEmail = etEmailAddress.getText().toString();
-                String txtPhoneNumber = etPhoneNUmber.getText().toString();
-                String txtPassword = etPassword.getText().toString();
+                final String txtEmail = etEmailAddress.getText().toString();
+                final String txtPhoneNumber = etPhoneNUmber.getText().toString();
+                final String txtPassword = etPassword.getText().toString();
 
                 if (!TextUtils.isEmpty(txtEmail)
                         && !TextUtils.isEmpty(txtPhoneNumber) && txtPhoneNumber.length() >= 10
                         && !TextUtils.isEmpty(txtPassword) && txtPassword.length() > 6){
 
+                    mAuth.fetchSignInMethodsForEmail(txtEmail)
+                            .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+
+                                    boolean isNewUser = Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getSignInMethods()).isEmpty();
+
+                                    if (isNewUser) {
+
+                                        createUser(txtEmail, txtPassword, txtPhoneNumber);
+
+                                    } else {
+
+                                        LoginUser(txtEmail, txtPassword, txtPhoneNumber);
+                                    }
+
+                                }
+                            });
+
                     progressDialog.show();
-                    createUser(txtEmail, txtPassword, txtPhoneNumber);
+
 
                 }else {
 
@@ -102,15 +123,61 @@ public class Register extends AppCompatActivity {
                     newPost.child("phone_number").setValue(txtPhoneNumber);
 
                     progressDialog.dismiss();
-                    Intent intent = new Intent(getApplicationContext(), Payment.class);
+
+                    Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
                     startActivity(intent);
                     finish();
+
+                    Toast.makeText(Register.this, "Registration successfully..", Toast.LENGTH_SHORT).show();
 
                 }else {
                     progressDialog.dismiss();
                     Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                    Toast.makeText(Register.this, "Authentication failed. Try again",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Register.this, "Authentication failed. Try again "+task.getException().getLocalizedMessage(),
+                            Toast.LENGTH_LONG).show();
+
+
+
+                }
+
+            }
+        });
+
+    }
+    private void LoginUser(final String txtEmail, String txtPassword, final String txtPhoneNumber) {
+
+        mAuth.signInWithEmailAndPassword(txtEmail, txtPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                if (task.isSuccessful()){
+
+                    progressDialog.dismiss();
+
+                    String userMail = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
+                    assert userMail != null;
+                    if (userMail.equals("davidnjau21@gmail.com")){
+
+                        Intent intent = new Intent(getApplicationContext(), AdminPage.class);
+                        startActivity(intent);
+                        finish();
+
+                    }else {
+
+                        Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    Toast.makeText(Register.this, "Login successful..", Toast.LENGTH_SHORT).show();
+
+                }else {
+
+                    progressDialog.dismiss();
+                    Log.w("TAG", "signUserWithEmail:failure", task.getException());
+                    Toast.makeText(Register.this, "Authentication failed. Try again "+task.getException().getLocalizedMessage(),
+                            Toast.LENGTH_LONG).show();
+
 
                 }
 
@@ -126,11 +193,29 @@ public class Register extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null){
 
-            Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
-            startActivity(intent);
-            finish();
+            String userMail = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
+            assert userMail != null;
+            if (userMail.equals("davidnjau21@gmail.com")){
+
+                Intent intent = new Intent(getApplicationContext(), AdminPage.class);
+                startActivity(intent);
+                finish();
+
+            }else {
+
+                Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+                startActivity(intent);
+                finish();
+
+            }
+
+
+
 
         }
 
     }
+
+
+
 }

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -44,30 +45,49 @@ public class CallReceiver extends BroadcastReceiver {
     private SimpleDateFormat dateTimeFormatter1,dateTimeFormatter;
 
     FetchDatabase fetchDatabase;
+    private SharedPreferences sharedPreferences;
+    private String sms;
+    private int smsNumber;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         //Log.w("intent " , intent.getAction().toString());
 
-        if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
-            savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
+        sharedPreferences = context.getSharedPreferences("payments", Context.MODE_PRIVATE);
+        sms = sharedPreferences.getString("sms", null);
 
-        } else {
 
-            String stateStr = intent.getExtras().getString(TelephonyManager.EXTRA_STATE);
-            String number = intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
+        if (sms != null){
 
-            int state = 0;
-            if (stateStr.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
-                state = TelephonyManager.CALL_STATE_IDLE;
-            } else if (stateStr.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
-                state = TelephonyManager.CALL_STATE_OFFHOOK;
-            } else if (stateStr.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
-                state = TelephonyManager.CALL_STATE_RINGING;
+            smsNumber = Integer.parseInt(sms);
+
+            if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
+                savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
+
+            } else {
+
+                String stateStr = intent.getExtras().getString(TelephonyManager.EXTRA_STATE);
+                String number = intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
+
+                int state = 0;
+                if (stateStr.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
+                    state = TelephonyManager.CALL_STATE_IDLE;
+                } else if (stateStr.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
+                    state = TelephonyManager.CALL_STATE_OFFHOOK;
+                } else if (stateStr.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
+                    state = TelephonyManager.CALL_STATE_RINGING;
+                }
+
+                onCallStateChanged(context, state, number);
             }
 
-            onCallStateChanged(context, state, number);
+        }else {
+
+            Log.e("-*-*-* ", "nope");
+
         }
+
+
     }
 
 
@@ -127,7 +147,7 @@ public class CallReceiver extends BroadcastReceiver {
                                         databaseHelper = new DatabaseHelper(context);
                                         fetchDatabase = new FetchDatabase();
 
-                                        if (databaseHelper.getCount() <200){
+                                        if (databaseHelper.getCount() < smsNumber){
 
                                             Log.e("--*-* " , String.valueOf(databaseHelper.getCount()));
 

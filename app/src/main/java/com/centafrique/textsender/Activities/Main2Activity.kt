@@ -1,12 +1,15 @@
 package com.centafrique.textsender.Activities
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -27,6 +30,7 @@ class Main2Activity : AppCompatActivity() {
     private val fragmentMessages = FragmentMessages()
     private val fragmentMissedCalls = FragmentMissedCalls()
     private lateinit var cdt: CountDownTimer
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,38 +42,47 @@ class Main2Activity : AppCompatActivity() {
         val btnMissedCalls : Button = findViewById(R.id.btnMissedCalls)
         val btnMessages : Button = findViewById(R.id.btnMessages)
 
+        sharedPreferences = applicationContext.getSharedPreferences("payments", Context.MODE_PRIVATE)
+        val sms = sharedPreferences.getString("sms", null)
+
         val databaseHelper = DatabaseHelper(applicationContext)
-        if (databaseHelper.getCount()>=1200){
 
-//            myview.visibility = View.VISIBLE
-//            btnMissedCalls.visibility = View.GONE
-//            btnMessages.visibility = View.GONE
-//
-//            mainPage.isEnabled = false
+        if (sms != null) {
 
-            cdt = object : CountDownTimer(3000, 1000) {
-                override fun onTick(millisUntilFinished: Long) {
+            if (databaseHelper.getCount()>=sms.toInt()){
 
-                }override fun onFinish() {
+                cdt = object : CountDownTimer(3000, 1000) {
+                    override fun onTick(millisUntilFinished: Long) {
 
-                    val intent = Intent(this@Main2Activity, Payment::class.java)
-                    startActivity(intent)
-                    finish()
+                    }override fun onFinish() {
 
+                        val intent = Intent(this@Main2Activity, Payment::class.java)
+                        startActivity(intent)
+                        finish()
 
+                    }
                 }
-            }
 
-            cdt.start()
+                cdt.start()
+
+                Toast.makeText(this, "Complete your payment first",
+                        Toast.LENGTH_SHORT).show()
+
+
+            }else{
+
+                myview.visibility = View.GONE
+                mainPage.isEnabled = true
+
+            }
+        }else{
+
+            val intent = Intent(this@Main2Activity, Payment::class.java)
+            startActivity(intent)
+            finish()
 
             Toast.makeText(this, "Complete your payment first",
                     Toast.LENGTH_SHORT).show()
-
-
-        }else{
-
-            myview.visibility = View.GONE
-            mainPage.isEnabled = true
 
         }
 

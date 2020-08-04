@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.AdminPage">
+
+    <LinearLayout
+        android:id="@+id/linear"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:singleLine="true"
+            android:drawableStart="@drawable/ic_action_card"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/round_outline2"
+            android:id="@+id/etMpesaCode"
+            android:hint=" MPESA CODE"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:singleLine="true"
+            android:drawableStart="@drawable/ic_action_amount"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/round_outline2"
+            android:id="@+id/etAmount"
+            android:hint="Amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:drawableEnd="@drawable/ic_action_done"
+            android:layout_margin="10dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/round_outline"
+            android:layout_gravity="center"
+            android:textAllCaps="false"
+            android:id="@+id/btnActivatePlan"
+            android:text="Update code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginBottom="75dp"
+        android:layout_below="@+id/linear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_margin="10dp"
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <Button
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/round_outline"
+        android:layout_gravity="center"
+        android:textAllCaps="false"
+        android:id="@+id/btnMainPage"
+        android:text="Main Page"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+
+</RelativeLayout>

@@ -1,5 +1,6 @@
 package com.centafrique.textsender.Activities
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -8,6 +9,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.centafrique.textsender.R
 import com.google.firebase.FirebaseError
@@ -23,12 +25,16 @@ class Payment : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
 
+    private lateinit var progressDialog: ProgressDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment)
 
         btnActivatePlan = findViewById(R.id.btnActivatePlan)
         etMpesaCode = findViewById(R.id.etMpesaCode)
+
+        progressDialog = ProgressDialog(this)
 
         sharedPreferences = applicationContext.getSharedPreferences("payments", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
@@ -40,8 +46,14 @@ class Payment : AppCompatActivity() {
 
         btnActivatePlan.setOnClickListener {
 
+            progressDialog.setTitle("Please wait..")
+            progressDialog.setMessage("Processing payment..")
+            progressDialog.setCanceledOnTouchOutside(false)
+
             val mpesaCode = etMpesaCode.text.toString()
             if (!TextUtils.isEmpty(mpesaCode)){
+
+                progressDialog.show()
 
                 myRef.orderByChild("mpesa_code").equalTo(mpesaCode)
                         .addListenerForSingleValueEvent(object : ValueEventListener{
@@ -54,21 +66,23 @@ class Payment : AppCompatActivity() {
 
                         if (p0.exists()){
 
-                            //exists
-                            val intent = Intent(this@Payment, Main2Activity::class.java)
-                            startActivity(intent)
-
                             for (ds in p0.children) {
 
                                 val amount = ds.child("amount").getValue(String::class.java)
                                 editor.putString("sms", amount)
                                 editor.apply()
 
+                                //exists
+                                val intent = Intent(this@Payment, Main2Activity::class.java)
+                                startActivity(intent)
+
                             }
 
-                            Log.e("-*-*-* ", "exists")
 
                         }else{
+
+                            progressDialog.dismiss()
+                            Toast.makeText(this@Payment, "Please wait while we update the payment. Try later on", Toast.LENGTH_LONG).show()
 
                             //doesn't exist
                             Log.e("-*-*-* ", "doesn't exist")

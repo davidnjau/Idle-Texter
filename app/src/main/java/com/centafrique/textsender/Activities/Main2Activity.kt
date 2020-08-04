@@ -68,7 +68,6 @@ class Main2Activity : AppCompatActivity() {
                 Toast.makeText(this, "Complete your payment first",
                         Toast.LENGTH_SHORT).show()
 
-
             }else{
 
                 myview.visibility = View.GONE

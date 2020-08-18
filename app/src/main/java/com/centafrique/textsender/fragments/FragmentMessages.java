@@ -74,7 +74,7 @@ public class FragmentMessages extends Fragment {
         });
 
         FloatingActionButton mpesaText = view.findViewById(R.id.mpesaText);
-        addTextMessages.setOnClickListener(new View.OnClickListener() {
+        mpesaText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

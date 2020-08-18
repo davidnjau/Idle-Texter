@@ -2,9 +2,12 @@ package com.centafrique.textsender.Helperclass;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -22,10 +25,12 @@ import androidx.core.content.ContextCompat;
 
 import com.centafrique.textsender.Database.DatabaseHelper;
 import com.centafrique.textsender.R;
+import com.centafrique.textsender.SMSUtils;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static android.content.ContentValues.TAG;
@@ -48,6 +53,7 @@ public class CallReceiver extends BroadcastReceiver {
     private SharedPreferences sharedPreferences;
     private String sms;
     private int smsNumber;
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -143,23 +149,22 @@ public class CallReceiver extends BroadcastReceiver {
 
                                         dateTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                                         dateTimeFormatter1 = new SimpleDateFormat("dd/MM/yyyy");
+
                                         Date date = new Date();
                                         databaseHelper = new DatabaseHelper(context);
                                         fetchDatabase = new FetchDatabase();
 
                                         if (databaseHelper.getCount() < smsNumber){
 
-                                            Log.e("--*-* " , String.valueOf(databaseHelper.getCount()));
-
                                             String txtMessage = fetchDatabase.getMessage(context);
                                             if (txtMessage.equals("false")){
 
-                                                txtToSend = context.getString(R.string.send_text_default) + "\n \nVia Idle Texter";
+                                                txtToSend = context.getString(R.string.send_text_default) + "\nVia Idle Texter";
 
 
                                             }else {
 
-                                                txtToSend = txtMessage + "\n \nVia Idle Texter";
+                                                txtToSend = txtMessage + "\nVia Idle Texter";
 
                                             }
 
@@ -175,14 +180,19 @@ public class CallReceiver extends BroadcastReceiver {
 
                                             }else {
 
-                                                SmsManager smgr = SmsManager.getDefault();
-                                                smgr.sendTextMessage(lastCallnumber,null,txtToSend,null,null);
 
-                                                Log.e("-*-*-* ", txtToSend);
+                                                try{
 
-                                                Toast.makeText(context, "SMS Sent Successfully", Toast.LENGTH_SHORT).show();
+//                                                    SmsManager smgr = SmsManager.getDefault();
+//                                                    smgr.sendTextMessage(lastCallnumber,null,txtToSend,null,null);
+//                                                    System.out.println("-*-*-*-* "+ lastCallnumber);
+//                                                    Toast.makeText(context, "SMS Sent Successfully", Toast.LENGTH_SHORT).show();
 
-                                                databaseHelper.addMissedCall(lastCallnumber, currentTime);
+                                                    SMSUtils.sendSMS(context, lastCallnumber, txtToSend, currentTime);
+
+                                                }catch (Exception e){
+                                                    e.printStackTrace();
+                                                }
 
                                             }
 
@@ -228,4 +238,6 @@ public class CallReceiver extends BroadcastReceiver {
         }
         lastState = state;
     }
+
+
 }

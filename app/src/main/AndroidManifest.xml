@@ -9,8 +9,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
 
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
+<!--    <uses-permission android:name="android.permission.RECEIVE_SMS" />-->
+<!--    <uses-permission android:name="android.permission.READ_SMS" />-->
 
     <application
         android:allowBackup="true"
@@ -47,11 +47,21 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".messagelistener.SimpleSmsReceiver">
+        <receiver
+            android:name=".SMSUtils"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+                <action android:name="SMS_SENT"/>
+                <action android:name="SMS_DELIVERED"/>
             </intent-filter>
         </receiver>
+
+<!--        <receiver android:name=".messagelistener.SimpleSmsReceiver">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.provider.Telephony.SMS_RECEIVED" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
     </application>
 
 </manifest>

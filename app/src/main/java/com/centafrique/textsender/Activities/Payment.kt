@@ -76,6 +76,8 @@ class Payment : AppCompatActivity() {
                                     editor.putString("sms", amount)
                                     editor.apply()
 
+                                    myRef.child(mpesaCode).child("usage").setValue("active")
+
                                     //exists
                                     val intent = Intent(this@Payment, Main2Activity::class.java)
                                     startActivity(intent)
@@ -84,6 +86,7 @@ class Payment : AppCompatActivity() {
 
                                     Toast.makeText(this@Payment, "The M-PESA code is already in use by another person", Toast.LENGTH_LONG).show()
                                     progressDialog.dismiss()
+
 
                                 }
 
@@ -95,8 +98,6 @@ class Payment : AppCompatActivity() {
                             progressDialog.dismiss()
                             Toast.makeText(this@Payment, "Please wait while we update the payment. Try later on", Toast.LENGTH_LONG).show()
 
-                            //doesn't exist
-                            Log.e("-*-*-* ", "doesn't exist")
 
                         }
 

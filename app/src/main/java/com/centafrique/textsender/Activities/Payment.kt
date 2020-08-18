@@ -69,12 +69,23 @@ class Payment : AppCompatActivity() {
                             for (ds in p0.children) {
 
                                 val amount = ds.child("amount").getValue(String::class.java)
-                                editor.putString("sms", amount)
-                                editor.apply()
+                                val usage = ds.child("usage").getValue(String::class.java)
 
-                                //exists
-                                val intent = Intent(this@Payment, Main2Activity::class.java)
-                                startActivity(intent)
+                                if (usage == "inactive") {
+
+                                    editor.putString("sms", amount)
+                                    editor.apply()
+
+                                    //exists
+                                    val intent = Intent(this@Payment, Main2Activity::class.java)
+                                    startActivity(intent)
+
+                                }else{
+
+                                    Toast.makeText(this@Payment, "The M-PESA code is already in use by another person", Toast.LENGTH_LONG).show()
+                                    progressDialog.dismiss()
+
+                                }
 
                             }
 

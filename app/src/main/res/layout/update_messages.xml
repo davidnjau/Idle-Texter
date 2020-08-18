@@ -30,7 +30,7 @@
 
                     <ImageView
                         android:layout_marginStart="10dp"
-                        android:background="@mipmap/ic_icon_logo"
+                        android:background="@mipmap/ic_launcher_icon"
                         android:layout_gravity="center"
                         android:layout_width="50dp"
                         android:layout_height="50dp"/>
@@ -70,6 +70,7 @@
                         android:layout_height="wrap_content">
 
                         <EditText
+                            android:maxLength="350"
                             android:id="@+id/etInformation"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

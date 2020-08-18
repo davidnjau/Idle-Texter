@@ -45,6 +45,7 @@ public class AdminPage extends AppCompatActivity {
                     DatabaseReference newPost = myRef.child(txtMpesaCode);
                     newPost.child("mpesa_code").setValue(txtMpesaCode);
                     newPost.child("amount").setValue(txtAmount);
+                    newPost.child("usage").setValue("inactive");
 
 
                 }else {

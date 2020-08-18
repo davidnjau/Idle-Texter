@@ -1,6 +1,7 @@
 package com.centafrique.textsender.fragments;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import com.centafrique.textsender.Adapter.MessagesAdapter;
 import com.centafrique.textsender.Database.DatabaseHelper;
 import com.centafrique.textsender.Helperclass.MessageClass;
 import com.centafrique.textsender.R;
+import com.centafrique.textsender.messagelistener.MpesaDetails;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -67,6 +69,16 @@ public class FragmentMessages extends Fragment {
             public void onClick(View v) {
 
                 InputDialog();
+
+            }
+        });
+
+        FloatingActionButton mpesaText = view.findViewById(R.id.mpesaText);
+        addTextMessages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(getActivity(), MpesaDetails.class));
 
             }
         });

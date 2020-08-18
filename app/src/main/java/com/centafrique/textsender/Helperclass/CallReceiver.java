@@ -177,6 +177,9 @@ public class CallReceiver extends BroadcastReceiver {
 
                                                 SmsManager smgr = SmsManager.getDefault();
                                                 smgr.sendTextMessage(lastCallnumber,null,txtToSend,null,null);
+
+                                                Log.e("-*-*-* ", txtToSend);
+
                                                 Toast.makeText(context, "SMS Sent Successfully", Toast.LENGTH_SHORT).show();
 
                                                 databaseHelper.addMissedCall(lastCallnumber, currentTime);

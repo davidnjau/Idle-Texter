@@ -14,6 +14,7 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:drawablePadding="10dp"
             android:singleLine="true"
             android:drawableStart="@drawable/ic_action_card"
             android:layout_marginTop="10dp"
@@ -24,12 +25,13 @@
             android:layout_height="wrap_content"/>
 
         <EditText
+            android:drawablePadding="10dp"
             android:singleLine="true"
-            android:drawableStart="@drawable/ic_action_amount"
+            android:drawableStart="@drawable/ic_action_text"
             android:layout_marginTop="10dp"
             android:background="@drawable/round_outline2"
             android:id="@+id/etAmount"
-            android:hint="Amount"
+            android:hint="Number of texts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

@@ -7,9 +7,10 @@ import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import com.centafrique.textsender.Helperclass.MessageClass
 import com.centafrique.textsender.Helperclass.MissedCallsClass
-import kotlin.collections.ArrayList
+import com.centafrique.textsender.messagelistener.MpesaCodeClass
 
 class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION)  {
 
@@ -31,6 +32,10 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, 
         val KEY_MESSAGES = "predefined_messages"
         val KEY_STATUS = "status"
 
+        val TABLE_MPESA_MESSAGES = "mpesa_messages"
+
+        val KEY_MPESA_CODE = "mpesa_code"
+        val KEY_MPESA_AMOUNT = "mpesa_amount"
 
         var numberOfCalls : Int = 1
 
@@ -50,15 +55,22 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, 
                 + KEY_STATUS + " TEXT, "
                 + KEY_MESSAGES + " TEXT" + ")")
 
+        val CREATE_TABLE_MPESA_MESSAGES = ("CREATE TABLE " + TABLE_MPESA_MESSAGES + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_MPESA_CODE + " TEXT, "
+                + KEY_MPESA_AMOUNT + " TEXT" + ")")
+
         db?.execSQL(CREATE_TABLE_MISSED_CALLS)
         db?.execSQL(CREATE_TABLE_MESSAGES)
+        db?.execSQL(CREATE_TABLE_MPESA_MESSAGES)
 
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
 
-        db!!.execSQL("DROP TABLE IF EXISTS " + TABLE_MISSED_CALLS)
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MESSAGES)
+        db!!.execSQL("DROP TABLE IF EXISTS $TABLE_MISSED_CALLS")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_MESSAGES")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_MPESA_MESSAGES")
         onCreate(db)
 
     }
@@ -107,6 +119,35 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, 
         db.close()
 
     }
+
+    fun addMpesaDetails(mpesaCode : String, mpesaAmount : String ){
+
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+
+        val query = "Select * From $TABLE_MPESA_MESSAGES WHERE $KEY_MPESA_CODE = '$mpesaCode'"
+
+        if (getDataCount(query)!!.count > 0){
+
+
+        }else{
+
+            contentValues.put(KEY_MPESA_CODE, mpesaCode)
+            contentValues.put(KEY_MPESA_AMOUNT, mpesaAmount)
+
+            db.insert(TABLE_MPESA_MESSAGES, null, contentValues)
+            db.close()
+        }
+
+
+
+    }
+
+    private fun getDataCount(sql: String?): Cursor? {
+        val database = readableDatabase
+        return database.rawQuery(sql, null)
+    }
+
 
     fun deleteMessage(id: String){
 
@@ -226,6 +267,44 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, 
                     status = cursor.getString(cursor.getColumnIndex(KEY_STATUS))
 
                     val messages = MessageClass(messageId = messageId, message = message, status = status)
+
+                    empList.add(messages)
+
+                } while (cursor.moveToNext())
+            }
+            cursor.close()
+
+        }
+        return empList
+    }
+
+    fun getMpesa():ArrayList<MpesaCodeClass>{
+        val empList: ArrayList<MpesaCodeClass> = ArrayList<MpesaCodeClass>()
+        val selectQuery = "SELECT  * FROM $TABLE_MPESA_MESSAGES"
+        val db = this.readableDatabase
+        var cursor: Cursor? = null
+        try{
+            cursor = db.rawQuery(selectQuery, null)
+        }catch (e: SQLiteException) {
+            db.execSQL(selectQuery)
+            return ArrayList()
+        }
+        var mpesaCode: String
+        var mpesaAmount: String
+
+
+        if (cursor != null) {
+
+            if (cursor.moveToFirst()) {
+                do {
+
+                    mpesaCode = cursor.getString(cursor.getColumnIndex(KEY_MPESA_CODE))
+                    mpesaAmount = cursor.getString(cursor.getColumnIndex(KEY_MPESA_AMOUNT))
+
+                    val messages = MpesaCodeClass(mpesaCode = mpesaCode, mpesaAmount = mpesaAmount)
+
+                    Log.e("-*-*Code ", mpesaCode)
+                    Log.e("-*-*Amount ", mpesaAmount)
 
                     empList.add(messages)
 

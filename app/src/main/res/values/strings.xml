@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">Idle Texter</string>
+    <string name="app_link">https://davidnjau21.wixsite.com/mysite/idletexter</string>
+
+    <string name="hyperlink">IdleTexter info\n<a href="https://davidnjau21.wixsite.com/mysite/idletexter" /></string>
 
     <string name="send_text_default">Thank you for contacting me. Please leave a message I will get back to you as soon as possible.</string>
     <string name="send_text">Thank you for contacting Nimo Naturals. Please leave a message on one of our platforms and we will get back to you as soon as possible.</string>
     <string name="send_text_maina">You attempted to call Dave but I could not receive your call. I will call you as soon as possible. Keep safe.</string>
-    <string name="ig_acc">https://instagram.com/nimonaturals?igshid=lktxo918p0wp</string>
 
     <string name="silver">Silver \nPayment Plan</string>
     <string name="bronze">Bronze \nPayment Plan</string>

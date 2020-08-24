@@ -19,6 +19,8 @@ import android.provider.ContactsContract;
 import android.telephony.PhoneStateListener;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -213,16 +215,19 @@ public class CallReceiver extends BroadcastReceiver {
                                         databaseHelper = new DatabaseHelper(context);
                                         fetchDatabase = new FetchDatabase();
 
+                                        String tag = context.getResources().getString(R.string.app_link);
+
+
                                         if (databaseHelper.getCount() < smsNumber){
 
                                             String txtMessage = fetchDatabase.getMessage(context);
                                             if (txtMessage.equals("false")){
 
-                                                txtToSend = context.getString(R.string.send_text_default) + "\nVia Idle Texter";
+                                                txtToSend = context.getString(R.string.send_text_default) + "\nIdleTexter Info: "+tag;
 
                                             }else {
 
-                                                txtToSend = txtMessage + "\nVia Idle Texter";
+                                                txtToSend = txtMessage +  "\nIdleTexter Info: "+tag;
 
                                             }
 

@@ -51,19 +51,9 @@ class Main2Activity : AppCompatActivity() {
 
             if (databaseHelper.getCount()>=sms.toInt()){
 
-                cdt = object : CountDownTimer(3000, 1000) {
-                    override fun onTick(millisUntilFinished: Long) {
-
-                    }override fun onFinish() {
-
-                        val intent = Intent(this@Main2Activity, Payment::class.java)
-                        startActivity(intent)
-                        finish()
-
-                    }
-                }
-
-                cdt.start()
+                val intent = Intent(this@Main2Activity, Payment::class.java)
+                startActivity(intent)
+                finish()
 
                 Toast.makeText(this, "Complete your payment first",
                         Toast.LENGTH_SHORT).show()
@@ -74,6 +64,7 @@ class Main2Activity : AppCompatActivity() {
                 mainPage.isEnabled = true
 
             }
+
         }else{
 
             val intent = Intent(this@Main2Activity, Payment::class.java)
@@ -117,13 +108,13 @@ class Main2Activity : AppCompatActivity() {
         val smsPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS)
         val callLogPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CALL_LOG)
         val phoneStatePermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE)
-//        val readPhonePermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_NUMBERS)
+        val readPhonePermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CONTACTS)
 
         val listPermissionNeeded = ArrayList<String>()
         if (smsPermission != PackageManager.PERMISSION_GRANTED)listPermissionNeeded.add(android.Manifest.permission.SEND_SMS)
         if (callLogPermission != PackageManager.PERMISSION_GRANTED)listPermissionNeeded.add(android.Manifest.permission.READ_CALL_LOG)
         if (phoneStatePermission != PackageManager.PERMISSION_GRANTED)listPermissionNeeded.add(android.Manifest.permission.READ_PHONE_STATE)
-//        if (readPhonePermission != PackageManager.PERMISSION_GRANTED)listPermissionNeeded.add(android.Manifest.permission.READ_PHONE_NUMBERS)
+        if (readPhonePermission != PackageManager.PERMISSION_GRANTED)listPermissionNeeded.add(android.Manifest.permission.READ_CONTACTS)
 
         if (!listPermissionNeeded.isEmpty()){
 
@@ -147,7 +138,7 @@ class Main2Activity : AppCompatActivity() {
                 perms[android.Manifest.permission.SEND_SMS] = PackageManager.PERMISSION_GRANTED
                 perms[android.Manifest.permission.READ_CALL_LOG] = PackageManager.PERMISSION_GRANTED
                 perms[android.Manifest.permission.READ_PHONE_STATE] = PackageManager.PERMISSION_GRANTED
-//                perms[android.Manifest.permission.READ_PHONE_NUMBERS] = PackageManager.PERMISSION_GRANTED
+                perms[android.Manifest.permission.READ_CONTACTS] = PackageManager.PERMISSION_GRANTED
 
                 if (grantResults.size > 0) {
 
@@ -156,7 +147,7 @@ class Main2Activity : AppCompatActivity() {
                     if (perms[android.Manifest.permission.SEND_SMS] == PackageManager.PERMISSION_GRANTED
                             && perms[android.Manifest.permission.READ_CALL_LOG] == PackageManager.PERMISSION_GRANTED
                             && perms[android.Manifest.permission.READ_PHONE_STATE] == PackageManager.PERMISSION_GRANTED
-//                            && perms[android.Manifest.permission.READ_PHONE_NUMBERS] == PackageManager.PERMISSION_GRANTED
+                            && perms[android.Manifest.permission.READ_CONTACTS] == PackageManager.PERMISSION_GRANTED
                     ){
 
                         Toast.makeText(applicationContext, "All permissions granted", Toast.LENGTH_SHORT).show()
@@ -165,7 +156,7 @@ class Main2Activity : AppCompatActivity() {
                         if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.SEND_SMS )
                                 || ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_CALL_LOG)
                                 || ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_PHONE_STATE)
-//                                || ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_PHONE_NUMBERS)
+                                || ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_CONTACTS)
                         ){
                             showDialogOK("These permissions are required for the app to work.",
                             DialogInterface.OnClickListener { dialog, which ->

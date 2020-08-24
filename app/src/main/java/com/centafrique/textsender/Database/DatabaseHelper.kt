@@ -23,6 +23,8 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, 
 
         val KEY_ID = "id"
 
+        val KEY_PHONE_NAME = "phone_name"
+
         val KEY_PHONE_NUMBER = "phone_number"
         val KEY_NUMBER_CALLS = "calls_number"
         val KEY_TIME = "time"
@@ -47,6 +49,7 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, 
         val CREATE_TABLE_MISSED_CALLS = ("CREATE TABLE " + TABLE_MISSED_CALLS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_PHONE_NUMBER + " TEXT,"
+                + KEY_PHONE_NAME + " TEXT,"
                 + KEY_NUMBER_CALLS + " TEXT, "
                 + KEY_TIME + " TEXT" + ")")
 
@@ -59,6 +62,7 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, 
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_MPESA_CODE + " TEXT, "
                 + KEY_MPESA_AMOUNT + " TEXT" + ")")
+
 
         db?.execSQL(CREATE_TABLE_MISSED_CALLS)
         db?.execSQL(CREATE_TABLE_MESSAGES)
@@ -75,11 +79,14 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, 
 
     }
 
-    fun addMissedCall(number : String, time : String){
+
+
+    fun addMissedCall(number : String, time : String, name: String = "new"){
 
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(KEY_PHONE_NUMBER, number)
+        contentValues.put(KEY_PHONE_NAME, name)
         contentValues.put(KEY_TIME, time)
         contentValues.put(KEY_NUMBER_CALLS, "1")
 
@@ -216,6 +223,7 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, 
         }
         var userId: String
         var userPhoneNumber: String
+        var userPhoneName: String
         var userCallTime: String
         var userCallNumber: String
 
@@ -225,11 +233,17 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, 
                 do {
                     userId = cursor.getString(cursor.getColumnIndex(KEY_ID))
                     userPhoneNumber = cursor.getString(cursor.getColumnIndex(KEY_PHONE_NUMBER))
+                    userPhoneName = cursor.getString(cursor.getColumnIndex(KEY_PHONE_NAME))
+
+                    val name = cursor.getString(cursor.getColumnIndex(KEY_PHONE_NAME))
+                    Log.e("*-*-*- ", name)
+
+
                     userCallTime = cursor.getString(cursor.getColumnIndex(KEY_TIME))
                     userCallNumber = cursor.getString(cursor.getColumnIndex(KEY_NUMBER_CALLS))
 
                     val missedCalls = MissedCallsClass(userId = userId, userPhoneNumber = userPhoneNumber,
-                            time = userCallTime, call_number = userCallNumber)
+                            userPhoneName = userPhoneName, time = userCallTime, call_number = userCallNumber)
 
                     empList.add(missedCalls)
 
@@ -302,9 +316,6 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, 
                     mpesaAmount = cursor.getString(cursor.getColumnIndex(KEY_MPESA_AMOUNT))
 
                     val messages = MpesaCodeClass(mpesaCode = mpesaCode, mpesaAmount = mpesaAmount)
-
-                    Log.e("-*-*Code ", mpesaCode)
-                    Log.e("-*-*Amount ", mpesaAmount)
 
                     empList.add(messages)
 

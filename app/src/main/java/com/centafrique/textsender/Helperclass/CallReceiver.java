@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -14,6 +15,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.CallLog;
+import android.provider.ContactsContract;
 import android.telephony.PhoneStateListener;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
@@ -31,6 +33,7 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import static android.content.ContentValues.TAG;
@@ -53,6 +56,7 @@ public class CallReceiver extends BroadcastReceiver {
     private SharedPreferences sharedPreferences;
     private String sms;
     private int smsNumber;
+    private String phoneName;
 
 
     @Override
@@ -137,14 +141,69 @@ public class CallReceiver extends BroadcastReceiver {
                                     == PackageManager.PERMISSION_GRANTED) {
 
                                 String[] projection = new String[]{CallLog.Calls.NUMBER};
+                                String[] projection1 = new String[]{CallLog.Calls.CACHED_NAME};
+
                                 Cursor cur = context.getContentResolver().query(CallLog.Calls.CONTENT_URI,
                                         projection, null, null, CallLog.Calls.DATE +" desc");
+                                Cursor cur1 = context.getContentResolver().query(CallLog.Calls.CONTENT_URI,
+                                        projection1, null, null, CallLog.Calls.DATE +" desc");
+
+                                assert cur != null;
+                                assert cur1 != null;
+
                                 cur.moveToFirst();
+                                cur1.moveToFirst();
 
                                 String lastCallnumber = cur.getString(0);
+                                String lastCall = cur1.getString(0);
 
                                 if (lastCallnumber != null){
 
+//                                    ContentResolver cr = context.getContentResolver();
+//                                    Cursor cur1 = cr.query(ContactsContract.Contacts.CONTENT_URI,
+//                                            null, null, null, null);
+//
+//                                    if ((cur1 != null ? cur1.getCount() : 0) > 0) {
+//                                        while (cur1 != null && cur1.moveToNext()) {
+//                                            String id = cur1.getString(
+//                                                    cur1.getColumnIndex(ContactsContract.Contacts._ID));
+//                                            String name = cur1.getString(cur1.getColumnIndex(
+//                                                    ContactsContract.Contacts.DISPLAY_NAME));
+//
+//                                            if (cur1.getInt(cur1.getColumnIndex(
+//                                                    ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+//                                                Cursor pCur = cr.query(
+//                                                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+//                                                        null,
+//                                                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+//                                                        new String[]{id}, null);
+//                                                while (pCur.moveToNext()) {
+//                                                    String phoneNo = pCur.getString(pCur.getColumnIndex(
+//                                                            ContactsContract.CommonDataKinds.Phone.NUMBER));
+//
+//                                                    Log.e("-*-*-*all ", phoneNo);
+//
+//                                                    if (lastCallnumber.equals(phoneNo)){
+//
+//                                                        Log.e("-*-*-*Yes ", name);
+//
+//                                                    }else {
+//
+//                                                        Log.e("-*-*-*No ", lastCallnumber);
+//
+//                                                    }
+//
+//
+////                                                    databaseHelper.addContacts(phoneNo, name);
+//
+//                                                }
+//                                                pCur.close();
+//                                            }
+//                                        }
+//                                    }
+//                                    if(cur1!=null){
+//                                        cur1.close();
+//                                    }
                                     try{
 
                                         dateTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -160,7 +219,6 @@ public class CallReceiver extends BroadcastReceiver {
                                             if (txtMessage.equals("false")){
 
                                                 txtToSend = context.getString(R.string.send_text_default) + "\nVia Idle Texter";
-
 
                                             }else {
 
@@ -188,7 +246,7 @@ public class CallReceiver extends BroadcastReceiver {
 //                                                    System.out.println("-*-*-*-* "+ lastCallnumber);
 //                                                    Toast.makeText(context, "SMS Sent Successfully", Toast.LENGTH_SHORT).show();
 
-                                                    SMSUtils.sendSMS(context, lastCallnumber, txtToSend, currentTime);
+                                                    SMSUtils.sendSMS(context, lastCallnumber,lastCall, txtToSend, currentTime);
 
                                                 }catch (Exception e){
                                                     e.printStackTrace();
@@ -207,7 +265,6 @@ public class CallReceiver extends BroadcastReceiver {
                                     }
                                     catch (Exception e){
 
-                                        Log.e("*-*-*- " , e.toString());
                                         Toast.makeText(context, "SMS Failed to Send to " + lastCallnumber, Toast.LENGTH_SHORT).show();
                                     }
 
@@ -215,7 +272,7 @@ public class CallReceiver extends BroadcastReceiver {
 
 
                             }else {
-                                Toast.makeText(context, "Not ", Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, "Please allow permissions ", Toast.LENGTH_LONG).show();
 
                             }
 

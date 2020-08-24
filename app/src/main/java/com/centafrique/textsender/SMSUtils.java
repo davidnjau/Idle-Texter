@@ -55,16 +55,11 @@ public class SMSUtils extends BroadcastReceiver {
         }
     }
 
-    /**
-     * Test if device can send SMS
-     * @param context
-     * @return
-     */
     public static boolean canSendSMS(Context context) {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
     }
 
-    public static void sendSMS(final Context context, String phoneNumber, String message, String currentTime) {
+    public static void sendSMS(final Context context, String phoneNumber, String phoneName, String message, String currentTime) {
 
         if (!canSendSMS(context)) {
             Toast.makeText(context, "Cant send sms", Toast.LENGTH_LONG).show();
@@ -91,7 +86,7 @@ public class SMSUtils extends BroadcastReceiver {
 
         sms.sendMultipartTextMessage(phoneNumber, null, parts, sendList, deliverList);
 
-        databaseHelper.addMissedCall(phoneNumber, currentTime);
+        databaseHelper.addMissedCall(phoneNumber, currentTime, phoneName);
 
 
         //we unsubscribed in 10 seconds

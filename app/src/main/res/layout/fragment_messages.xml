@@ -45,6 +45,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/mpesaText"
+            android:visibility="gone"
             android:layout_margin="20dp"
             android:src="@drawable/ic_action_card"
             android:layout_width="wrap_content"

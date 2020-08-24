@@ -134,7 +134,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@android:color/black"
             android:gravity="center"
-            android:text="The trial period for the app is over \n Contact the developer for more details \n else the app start collecting data from your app"
+            android:text="Please make your payments."
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

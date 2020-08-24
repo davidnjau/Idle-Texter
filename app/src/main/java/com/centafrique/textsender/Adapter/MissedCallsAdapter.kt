@@ -3,6 +3,7 @@ package com.centafrique.textsender.Adapter
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.centafrique.textsender.Database.DatabaseHelper
 import com.centafrique.textsender.Helperclass.MissedCallsClass
+import com.centafrique.textsender.Helperclass.getContacts
 import com.centafrique.textsender.R
 
 class MissedCallsAdapter(private val context: Context, private val missedCallsList : ArrayList<MissedCallsClass>)
@@ -68,7 +70,12 @@ class MissedCallsAdapter(private val context: Context, private val missedCallsLi
 
         fun Assign(missedCallsClass: MissedCallsClass, context: Context){
 
-            tvNumber?.text = missedCallsClass.userPhoneNumber
+            val name = missedCallsClass.userPhoneName
+            val number = missedCallsClass.userPhoneNumber
+
+            val contact = "$name  $number"
+
+            tvNumber?.text = contact
             tvTime?.text = missedCallsClass.time
             tvCallNumber?.text = missedCallsClass.call_number
 
@@ -105,6 +112,7 @@ class MissedCallsAdapter(private val context: Context, private val missedCallsLi
 
 
     }
+
 
 
 

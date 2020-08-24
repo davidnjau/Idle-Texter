@@ -57,8 +57,8 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                progressDialog.setTitle("Registration on going.");
-                progressDialog.setMessage("Please wait as you're being registered.");
+                progressDialog.setTitle("Account Verification on going.");
+                progressDialog.setMessage("Please wait as your account is being verified.");
                 progressDialog.setCanceledOnTouchOutside(false);
 
                 final String txtEmail = etEmailAddress.getText().toString();
@@ -152,8 +152,6 @@ public class Register extends AppCompatActivity {
 
                 if (task.isSuccessful()){
 
-                    progressDialog.dismiss();
-
                     String userMail = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
                     assert userMail != null;
                     if (userMail.equals("davidnjau21@gmail.com")){
@@ -169,6 +167,7 @@ public class Register extends AppCompatActivity {
                         finish();
                     }
 
+                    progressDialog.dismiss();
                     Toast.makeText(Register.this, "Login successful..", Toast.LENGTH_SHORT).show();
 
                 }else {
@@ -208,9 +207,6 @@ public class Register extends AppCompatActivity {
                 finish();
 
             }
-
-
-
 
         }
 

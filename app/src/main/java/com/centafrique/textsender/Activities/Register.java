@@ -25,6 +25,8 @@ import com.google.firebase.auth.ProviderQueryResult;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.rilixtech.widget.countrycodepicker.Country;
+import com.rilixtech.widget.countrycodepicker.CountryCodePicker;
 
 import java.util.Objects;
 
@@ -36,6 +38,7 @@ public class Register extends AppCompatActivity {
     private DatabaseReference databaseReference;
 
     private ProgressDialog progressDialog;
+    CountryCodePicker ccp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,7 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         progressDialog = new ProgressDialog(this);
+        ccp = (CountryCodePicker) findViewById(R.id.ccp);
 
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
@@ -52,6 +56,15 @@ public class Register extends AppCompatActivity {
         etEmailAddress = findViewById(R.id.etEmailAddress);
         etPhoneNUmber = findViewById(R.id.etPhoneNUmber);
         etPassword = findViewById(R.id.etPassword);
+        ccp.registerPhoneNumberTextView(etPhoneNUmber);
+
+        ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+
+            @Override
+            public void onCountrySelected(Country selectedCountry) {
+                Toast.makeText(getApplicationContext(), "Updated " + selectedCountry.getPhoneCode(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         findViewById(R.id.btnSignUp).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,8 +79,14 @@ public class Register extends AppCompatActivity {
                 final String txtPassword = etPassword.getText().toString();
 
                 if (!TextUtils.isEmpty(txtEmail)
-                        && !TextUtils.isEmpty(txtPhoneNumber) && txtPhoneNumber.length() >= 10
+                        && !TextUtils.isEmpty(txtPhoneNumber) && txtPhoneNumber.length() >= 9
                         && !TextUtils.isEmpty(txtPassword) && txtPassword.length() > 6){
+
+                    String code = String.valueOf(ccp.getPhoneNumber().getCountryCode());
+                    String number = String.valueOf(ccp.getPhoneNumber().getNationalNumber());
+
+                    final String phoneNumber = code + number;
+
 
                     mAuth.fetchSignInMethodsForEmail(txtEmail)
                             .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
@@ -78,11 +97,11 @@ public class Register extends AppCompatActivity {
 
                                     if (isNewUser) {
 
-                                        createUser(txtEmail, txtPassword, txtPhoneNumber);
+                                        createUser(txtEmail, txtPassword, phoneNumber);
 
                                     } else {
 
-                                        LoginUser(txtEmail, txtPassword, txtPhoneNumber);
+                                        LoginUser(txtEmail, txtPassword, phoneNumber);
                                     }
 
                                 }
@@ -136,8 +155,6 @@ public class Register extends AppCompatActivity {
                     Toast.makeText(Register.this, "Authentication failed. Try again "+task.getException().getLocalizedMessage(),
                             Toast.LENGTH_LONG).show();
 
-
-
                 }
 
             }
@@ -176,7 +193,6 @@ public class Register extends AppCompatActivity {
                     Log.w("TAG", "signUserWithEmail:failure", task.getException());
                     Toast.makeText(Register.this, "Authentication failed. Try again "+task.getException().getLocalizedMessage(),
                             Toast.LENGTH_LONG).show();
-
 
                 }
 

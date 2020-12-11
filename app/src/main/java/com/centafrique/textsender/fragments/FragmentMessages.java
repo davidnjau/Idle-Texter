@@ -22,7 +22,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.centafrique.textsender.Adapter.MessagesAdapter;
+import com.centafrique.textsender.Adapter.MessagesJavaAdapter;
 import com.centafrique.textsender.Database.DatabaseHelper;
+import com.centafrique.textsender.Helperclass.FetchDatabase;
 import com.centafrique.textsender.Helperclass.MessageClass;
 import com.centafrique.textsender.R;
 import com.centafrique.textsender.messagelistener.MpesaDetails;
@@ -50,7 +52,7 @@ public class FragmentMessages extends Fragment {
     private LinearLayout myview;
 
     private ArrayList<MessageClass> messageClassArrayList;
-    private MessagesAdapter messagesAdapter;
+    private MessagesJavaAdapter messagesAdapter;
 
     @Nullable
     @Override
@@ -104,6 +106,9 @@ public class FragmentMessages extends Fragment {
 
         Button btn_Action = promptsView.findViewById(R.id.btn_Action);
         Button btn_Cancel = promptsView.findViewById(R.id.btn_Cancel);
+        Button btnSend = promptsView.findViewById(R.id.btnSend);
+
+        btnSend.setVisibility(View.GONE);
 
         btn_Action.setText("Add");
 
@@ -119,12 +124,6 @@ public class FragmentMessages extends Fragment {
 
                 StartRecyclerView();
 
-//
-//                IngredientsPojo ingredientsPojo = IngredientsPojoArrayList.get(position);
-//                ingredientsPojo.setNotes(txtInfo);
-//                notifyItemChanged(position);
-
-
             }
         });
 
@@ -135,6 +134,8 @@ public class FragmentMessages extends Fragment {
                 alertDialog.dismiss();
             }
         });
+
+
 
 
         alertDialog.show();
@@ -152,10 +153,12 @@ public class FragmentMessages extends Fragment {
     }
 
 
+
+
     public void StartRecyclerView() {
 
         messageClassArrayList = databaseHelper.getMessages();
-        messagesAdapter = new MessagesAdapter(getActivity(), messageClassArrayList );
+        messagesAdapter = new MessagesJavaAdapter(getActivity(), messageClassArrayList,messagesAdapter );
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(messagesAdapter);

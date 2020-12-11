@@ -17,6 +17,29 @@
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:text="Select a payment plan and you will be prompted to enter your MPESA pin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/colorTrans"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+            <LinearLayout
+                android:id="@+id/silver"
+                android:onClick="Payment"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -69,6 +92,8 @@
                 android:layout_height="1dp"/>
 
             <LinearLayout
+                android:id="@+id/bronze"
+                android:onClick="Payment"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -123,6 +148,8 @@
                 android:layout_height="1dp"/>
 
             <LinearLayout
+                android:id="@+id/gold"
+                android:onClick="Payment"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -178,6 +205,8 @@
                 android:layout_height="1dp"/>
 
             <LinearLayout
+                android:id="@+id/premium"
+                android:onClick="Payment"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -236,32 +265,60 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:layout_gravity="center"
-                    android:text="Payment Instructions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <View
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@color/colorTrans"
+                <LinearLayout
+                    android:visibility="gone"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"/>
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:layout_gravity="center"
+                        android:text="Payment Instructions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <View
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/colorTrans"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
 
 
-                <TextView
-                    android:textColor="@android:color/black"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_gravity="center"
-                    android:text="@string/payment_instructions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    <TextView
+                        android:textColor="@android:color/black"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:layout_gravity="center"
+                        android:text="@string/payment_instructions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:singleLine="true"
+                        android:drawableStart="@drawable/ic_action_call_dark"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/round_outline2"
+                        android:id="@+id/etPhoneNUmber"
+                        android:hint="Confirm Number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+
+                </LinearLayout>
+
 
                 <EditText
+                    android:visibility="gone"
                     android:singleLine="true"
                     android:drawableStart="@drawable/ic_action_card"
                     android:layout_marginTop="10dp"
@@ -272,6 +329,7 @@
                     android:layout_height="wrap_content"/>
 
                 <Button
+                    android:visibility="gone"
                     android:drawableEnd="@drawable/ic_action_done"
                     android:layout_margin="10dp"
                     android:textColor="@android:color/white"

@@ -31,6 +31,7 @@ class Main2Activity : AppCompatActivity() {
     private val fragmentMissedCalls = FragmentMissedCalls()
     private lateinit var cdt: CountDownTimer
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,18 +46,19 @@ class Main2Activity : AppCompatActivity() {
         sharedPreferences = applicationContext.getSharedPreferences("payments", Context.MODE_PRIVATE)
         val sms = sharedPreferences.getString("sms", null)
 
+
+
         val databaseHelper = DatabaseHelper(applicationContext)
 
         if (sms != null) {
 
-            if (databaseHelper.getCount()>=sms.toInt()){
+            if (databaseHelper.getCount() >= sms.toInt()){
 
                 val intent = Intent(this@Main2Activity, Payment::class.java)
                 startActivity(intent)
                 finish()
 
-                Toast.makeText(this, "Complete your payment first",
-                        Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Complete your payment first", Toast.LENGTH_SHORT).show()
 
             }else{
 
@@ -66,6 +68,10 @@ class Main2Activity : AppCompatActivity() {
             }
 
         }else{
+
+            editor = sharedPreferences.edit()
+            editor.putString("sms", "100")
+            editor.apply()
 
             val intent = Intent(this@Main2Activity, Payment::class.java)
             startActivity(intent)

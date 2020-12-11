@@ -128,7 +128,9 @@ class MessagesAdapter(private val context: Context, private val messagesList : A
                 alertDialog.dismiss()
 
             }
-            btn_Cancel.setOnClickListener { alertDialog.dismiss() }
+            btn_Cancel.setOnClickListener {
+                alertDialog.dismiss()
+            }
             alertDialog.show()
         }
 

@@ -292,6 +292,40 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, 
         return empList
     }
 
+    fun getUpdatedMessages(messageId : String):String{
+
+        val selectQuery = "SELECT * FROM $TABLE_MESSAGES WHERE $KEY_ID = $messageId"
+        val db = this.readableDatabase
+        var cursor: Cursor? = null
+        try{
+            cursor = db.rawQuery(selectQuery, null)
+        }catch (e: SQLiteException) {
+            db.execSQL(selectQuery)
+            return ""
+        }
+        var messageId: String
+        var message: String = ""
+        var status: String
+
+
+        if (cursor != null) {
+
+            if (cursor.moveToFirst()) {
+                do {
+
+                    messageId = cursor.getString(cursor.getColumnIndex(KEY_ID))
+                    message = cursor.getString(cursor.getColumnIndex(KEY_MESSAGES))
+                    status = cursor.getString(cursor.getColumnIndex(KEY_STATUS))
+
+
+                } while (cursor.moveToNext())
+            }
+            cursor.close()
+
+        }
+        return message
+    }
+
     fun getMpesa():ArrayList<MpesaCodeClass>{
         val empList: ArrayList<MpesaCodeClass> = ArrayList<MpesaCodeClass>()
         val selectQuery = "SELECT  * FROM $TABLE_MPESA_MESSAGES"

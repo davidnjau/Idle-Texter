@@ -103,7 +103,7 @@ public class CallReceiver extends BroadcastReceiver {
     }
 
 
-    public void onCallStateChanged(final Context context, int state, String number) {
+    public void onCallStateChanged(final Context context, int state, final String number) {
 
         if (lastState == state) {
             //No change, debounce extras
@@ -158,6 +158,10 @@ public class CallReceiver extends BroadcastReceiver {
 
                                 String lastCallnumber = cur.getString(0);
                                 String lastCall = cur1.getString(0);
+//
+//                                Log.e("-*-*-*lastCallnumber ", lastCallnumber);
+//                                Log.e("-*-*-*lastCall ", lastCall);
+
 
                                 if (lastCallnumber != null){
 
@@ -206,6 +210,7 @@ public class CallReceiver extends BroadcastReceiver {
 //                                    if(cur1!=null){
 //                                        cur1.close();
 //                                    }
+
                                     try{
 
                                         dateTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -215,7 +220,7 @@ public class CallReceiver extends BroadcastReceiver {
                                         databaseHelper = new DatabaseHelper(context);
                                         fetchDatabase = new FetchDatabase();
 
-                                        String tag = context.getResources().getString(R.string.app_link);
+                                        String tag = context.getResources().getString(R.string.hyperlink);
 
 
                                         if (databaseHelper.getCount() < smsNumber){

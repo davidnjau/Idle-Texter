@@ -2,7 +2,7 @@
     <string name="app_name">Idle Texter</string>
     <string name="app_link">com.centafrique.idletexter</string>
 
-    <string name="hyperlink">IdleTexter info\n<a href="https://play.google.com/store/apps/details?id=com.centafrique.idletexter" /></string>
+    <string name="hyperlink">https://play.google.com/store/apps/details?id=com.centafrique.idletexter</string>
 
     <string name="send_text_default">Thank you for contacting me. Please leave a message I will get back to you as soon as possible.</string>
     <string name="send_text">Thank you for contacting Nimo Naturals. Please leave a message on one of our platforms and we will get back to you as soon as possible.</string>
@@ -12,6 +12,8 @@
     <string name="bronze">Bronze \nPayment Plan</string>
     <string name="gold">Gold \nPayment Plan</string>
     <string name="premium">Premium \nPayment Plan</string>
+
+    <string name="adId">ca-app-pub-2341333181404752~8269634420</string>
 
     <string name="payment_instructions">1. Go to the M-pesa Menu.\n
     2. Select Send money.\n

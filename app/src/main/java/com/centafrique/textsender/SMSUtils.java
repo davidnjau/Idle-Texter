@@ -84,9 +84,10 @@ public class SMSUtils extends BroadcastReceiver {
         ArrayList<PendingIntent> deliverList = new ArrayList<>();
         deliverList.add(deliveredPI);
 
+        databaseHelper.addMissedCall(phoneNumber, currentTime, phoneName);
+
         sms.sendMultipartTextMessage(phoneNumber, null, parts, sendList, deliverList);
 
-        databaseHelper.addMissedCall(phoneNumber, currentTime, phoneName);
 
 
         //we unsubscribed in 10 seconds

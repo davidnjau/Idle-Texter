@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.centafrique.textsender.Database.DatabaseHelper;
 import com.centafrique.textsender.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -63,6 +65,15 @@ public class Register extends AppCompatActivity {
             @Override
             public void onCountrySelected(Country selectedCountry) {
                 Toast.makeText(getApplicationContext(), "Updated " + selectedCountry.getPhoneCode(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        findViewById(R.id.tvContinue).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(new Intent(getApplicationContext(), Main2Activity.class));
+
             }
         });
 
@@ -205,6 +216,10 @@ public class Register extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        SharedPreferences sharedPreferences = this.getSharedPreferences("payments", Context.MODE_PRIVATE);
+        String sms = sharedPreferences.getString("sms", null);
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null){
 
@@ -223,6 +238,23 @@ public class Register extends AppCompatActivity {
                 finish();
 
             }
+
+        }else {
+
+            if (sms != null){
+
+                if (databaseHelper.getCount() >= Integer.parseInt(sms)){
+
+                    startActivity(new Intent(this, Payment.class));
+                }else {
+
+                    Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+            }
+
 
         }
 

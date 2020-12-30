@@ -10,8 +10,8 @@ public class LipaNaMpesa {
     @SerializedName("transaction_summary")
     private String transaction_summary;
 
-    @SerializedName("business_token")
-    private String business_token;
+    @SerializedName("api_key")
+    private String api_key;
 
     @SerializedName("amount")
     private String amount;
@@ -19,10 +19,10 @@ public class LipaNaMpesa {
     @SerializedName("account_ref")
     private String account_ref;
 
-    public LipaNaMpesa(String user_phone, String transaction_summary, String business_token, String amount, String account_ref) {
+    public LipaNaMpesa(String user_phone, String transaction_summary, String api_key, String amount, String account_ref) {
         this.user_phone = user_phone;
         this.transaction_summary = transaction_summary;
-        this.business_token = business_token;
+        this.api_key = api_key;
         this.amount = amount;
         this.account_ref = account_ref;
     }

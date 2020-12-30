@@ -17,7 +17,7 @@ public interface InterFaces {
     @POST("getaccess")
     Call<TokenResponse> getAccessLiveToken(@Body UserLogin userLogin);
 
-    @POST("businesspay")
+    @POST("makepayment")
     Call<PaymentResponse> lipaNaMpesa(@HeaderMap Map<String, String> headers,
                                       @Body LipaNaMpesa userRegister);
 

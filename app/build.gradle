@@ -48,9 +48,17 @@ dependencies {
     implementation 'io.reactivex:rxandroid:1.0.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
     implementation 'com.android.volley:volley:1.1.1'
+    implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
 
     implementation 'com.androidstudy:daraja:1.0.2'
     implementation 'com.github.joielechong:countrycodepicker:2.4.2'
+
+    // AdMob dependency
+    implementation 'com.google.android.gms:play-services-ads:19.3.0'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutines"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines"
 }
 repositories {
     mavenCentral()

@@ -114,6 +114,7 @@
 
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/layoutDelete"
                     android:padding="7dp"
                     android:background="@color/colorPrimary"

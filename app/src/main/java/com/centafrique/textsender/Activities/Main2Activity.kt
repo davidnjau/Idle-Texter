@@ -45,7 +45,7 @@ class Main2Activity : AppCompatActivity() {
 
         sharedPreferences = applicationContext.getSharedPreferences("payments", Context.MODE_PRIVATE)
         val sms = sharedPreferences.getString("sms", null)
-
+        editor = sharedPreferences.edit()
 
 
         val databaseHelper = DatabaseHelper(applicationContext)
@@ -54,13 +54,16 @@ class Main2Activity : AppCompatActivity() {
 
             if (databaseHelper.getCount() >= sms.toInt()){
 
-                val intent = Intent(this@Main2Activity, Payment::class.java)
+                val intent = Intent(this@Main2Activity, PaymentNew::class.java)
                 startActivity(intent)
                 finish()
 
                 Toast.makeText(this, "Complete your payment first", Toast.LENGTH_SHORT).show()
 
             }else{
+
+//                editor.putString("sms", "0")
+//                editor.apply()
 
                 myview.visibility = View.GONE
                 mainPage.isEnabled = true
@@ -69,11 +72,8 @@ class Main2Activity : AppCompatActivity() {
 
         }else{
 
-            editor = sharedPreferences.edit()
-            editor.putString("sms", "100")
-            editor.apply()
 
-            val intent = Intent(this@Main2Activity, Payment::class.java)
+            val intent = Intent(this@Main2Activity, PaymentNew::class.java)
             startActivity(intent)
             finish()
 

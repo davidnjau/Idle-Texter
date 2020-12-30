@@ -8,9 +8,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
@@ -18,8 +16,15 @@ import com.android.volley.toolbox.Volley
 import com.centafrique.textsender.Helperclass.CheckPhoneNumber
 import com.centafrique.textsender.R
 import com.centafrique.textsender.mpesa.*
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.reward.RewardItem
+import com.google.android.gms.ads.reward.RewardedVideoAd
+import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import kotlinx.coroutines.*
+import net.cachapa.expandablelayout.ExpandableLayout
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -29,7 +34,7 @@ import retrofit2.http.Url
 import java.util.*
 
 
-class Payment : AppCompatActivity() {
+class Payment : AppCompatActivity(), RewardedVideoAdListener {
 
     private lateinit var btnActivatePlan: Button
     private lateinit var etMpesaCode: EditText
@@ -47,17 +52,29 @@ class Payment : AppCompatActivity() {
     private var phoneNumber = ""
     private var baseUrl = ""
 
+    private lateinit var expanded_menu_payment : ExpandableLayout
+    private lateinit var expanded_menu_add : ExpandableLayout
+
     private lateinit var checkPhoneNumber: CheckPhoneNumber
+
+    private lateinit var mRewardedVideoAd : RewardedVideoAd
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment)
+
+        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this)
+        mRewardedVideoAd.rewardedVideoAdListener = this
+
+        loadRewardVideo()
 
         stringStringMap = HashMap()
         baseUrl = resources.getString(R.string.mpesa_base_url)
         checkPhoneNumber = CheckPhoneNumber()
 
         etPhoneNUmber = findViewById(R.id.etPhoneNUmber)
+        expanded_menu_payment = findViewById(R.id.expanded_menu_payment)
+        expanded_menu_add = findViewById(R.id.expanded_menu_add)
 
         btnActivatePlan = findViewById(R.id.btnActivatePlan)
         etMpesaCode = findViewById(R.id.etMpesaCode)
@@ -69,6 +86,54 @@ class Payment : AppCompatActivity() {
 
         val sms = sharedPreferences.getString("sms", null)
 
+        findViewById<TextView>(R.id.tvPayment).setOnClickListener {
+
+            if (expanded_menu_payment.isExpanded) {
+                expanded_menu_payment.collapse()
+            }else {
+                expanded_menu_payment.expand()
+            }
+
+            if (expanded_menu_add.isExpanded)
+                expanded_menu_add.collapse()
+
+        }
+
+        findViewById<Button>(R.id.btnViewAdd).setOnClickListener {
+
+            if (mRewardedVideoAd.isLoaded) {
+                mRewardedVideoAd.show()
+            }else {
+
+                CoroutineScope(Dispatchers.Main).launch {
+
+                    val job = Job()
+                    CoroutineScope(Dispatchers.IO + job).launch {
+
+                        loadRewardVideo()
+                        delay(3000)
+
+                    }.join()
+                    if (mRewardedVideoAd.isLoaded)
+                        mRewardedVideoAd.show()
+
+                }
+
+            }
+        }
+
+
+        findViewById<LinearLayout>(R.id.linear).setOnClickListener {
+
+            if (expanded_menu_add.isExpanded)
+                expanded_menu_add.collapse()
+            else
+                expanded_menu_add.expand()
+
+            if (expanded_menu_payment.isExpanded)
+                expanded_menu_payment.collapse()
+
+        }
 
         database = FirebaseDatabase.getInstance().reference
         val myRef = database.child("payments")
@@ -145,9 +210,20 @@ class Payment : AppCompatActivity() {
 
         loadToken()
 
+
+
     }
 
+    private fun loadRewardVideo() {
 
+        val addId = this.resources.getString(R.string.adId)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            mRewardedVideoAd.loadAd(addId, AdRequest.Builder().build())
+
+        }
+
+    }
 
 
     fun Payment(view: View) {
@@ -325,4 +401,38 @@ class Payment : AppCompatActivity() {
 
 
     }
+
+
+
+    override fun onRewardedVideoAdClosed() {
+    }
+    override fun onRewardedVideoAdLeftApplication() {
+        Toast.makeText(this, "You cannot get the free sms plan if you've not watched the video ", Toast.LENGTH_SHORT).show()
+    }
+    override fun onRewardedVideoAdFailedToLoad(p0: Int) {
+        Toast.makeText(this, "You cannot get the free sms plan if you've not watched the video ", Toast.LENGTH_SHORT).show()
+    }
+    override fun onRewarded(p0: RewardItem?) {
+        editor.putString("sms", "20")
+        editor.apply()
+    }
+
+
+    override fun onRewardedVideoAdLoaded() {
+
+    }
+    override fun onRewardedVideoAdOpened() {
+
+    }
+    override fun onRewardedVideoCompleted() {
+
+    }
+
+    override fun onRewardedVideoStarted() {
+
+    }
+
+
+
+
 }

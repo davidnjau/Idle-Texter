@@ -3,21 +3,108 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    tools:context=".Activities.Payment">
+    android:layout_margin="10dp"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    tools:context=".Activities.PaymentNew">
 
     <ScrollView
+        android:paddingBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_margin="10dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:padding="10dp"
+                android:background="@drawable/outline"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/linear"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="Watch an ad and get an SMS plan"
+                        android:id="@+id/tvAddInfo"
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <ImageButton
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_action_down"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/colorTrans"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+
+
+                <net.cachapa.expandablelayout.ExpandableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/expanded_menu_add"
+                    app:el_duration="1000"
+                    app:el_expanded="true"
+                    app:el_parallax="0.5">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:background="@drawable/round_outline"
+                            android:layout_marginBottom="10dp"
+                            android:textColor="@android:color/white"
+                            android:textAllCaps="false"
+                            android:id="@+id/btnViewAdd"
+                            android:text="View Ad"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                        <com.google.android.gms.ads.AdView
+                            android:id="@+id/adView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            ads:adSize="BANNER"
+                            ads:adUnitId="ca-app-pub-3940256099942544/5224354917"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" >
+
+                        </com.google.android.gms.ads.AdView>
+
+                    </LinearLayout>
+
+
+
+                </net.cachapa.expandablelayout.ExpandableLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:background="@drawable/outline"
                 android:orientation="vertical"
@@ -33,7 +120,7 @@
                         android:layout_weight="1"
                         android:id="@+id/tvPayment"
                         android:textStyle="bold"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@android:color/black"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:text="Select a payment plan and you will be prompted to enter your MPESA pin"
                         android:layout_width="wrap_content"
@@ -59,7 +146,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/expanded_menu_payment"
                     app:el_duration="1000"
-                    app:el_expanded="false"
+                    app:el_expanded="true"
                     app:el_parallax="0.5">
 
                     <LinearLayout
@@ -338,36 +425,23 @@
                                     android:layout_marginTop="10dp"
                                     android:background="@drawable/round_outline2"
                                     android:id="@+id/etPhoneNUmber"
-                                    android:hint="Confirm Number"
+                                    android:hint="Enter Number"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"/>
 
 
                             </LinearLayout>
 
-
-                            <EditText
-                                android:visibility="gone"
-                                android:singleLine="true"
-                                android:drawableStart="@drawable/ic_action_card"
-                                android:layout_marginTop="10dp"
-                                android:background="@drawable/round_outline2"
-                                android:id="@+id/etMpesaCode"
-                                android:hint=" MPESA CODE"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
-
                             <Button
-                                android:visibility="gone"
+                                android:layout_marginTop="10dp"
                                 android:drawableEnd="@drawable/ic_action_done"
-                                android:layout_margin="10dp"
                                 android:textColor="@android:color/white"
                                 android:background="@drawable/round_outline"
                                 android:layout_gravity="center"
                                 android:textAllCaps="false"
                                 android:id="@+id/btnActivatePlan"
-                                android:text="Send code"
-                                android:layout_width="wrap_content"
+                                android:text="Make Payment"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"/>
 
 
@@ -380,100 +454,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:padding="10dp"
-                android:background="@drawable/outline"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:id="@+id/linear"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:textStyle="bold"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="Watch an add and get free SMS plan"
-                        android:id="@+id/tvAddInfo"
-                        android:layout_weight="1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <ImageButton
-                        android:layout_gravity="center"
-                        android:background="@drawable/ic_action_down"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-
-                </LinearLayout>
-
-                <View
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@color/colorTrans"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"/>
-
-
-                <net.cachapa.expandablelayout.ExpandableLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/expanded_menu_add"
-                    app:el_duration="1000"
-                    app:el_expanded="false"
-                    app:el_parallax="0.5">
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <Button
-                            android:background="@drawable/round_outline"
-                            android:layout_marginBottom="10dp"
-                            android:textColor="@android:color/white"
-                            android:textAllCaps="false"
-                            android:id="@+id/btnViewAdd"
-                            android:text="View Add"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-
-                        <com.google.android.gms.ads.AdView
-                            android:id="@+id/adView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            ads:adSize="BANNER"
-                            ads:adUnitId="@string/adId"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" >
-
-                        </com.google.android.gms.ads.AdView>
-
-                    </LinearLayout>
-
-
-
-                </net.cachapa.expandablelayout.ExpandableLayout>
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_marginTop="10dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/colorPrimary"
-                android:text="Sign up..."
-                android:id="@+id/tvContinue"
-                android:layout_gravity="end"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
         </LinearLayout>
 
 
@@ -481,6 +461,5 @@
 
 
     </ScrollView>
-
 
 </RelativeLayout>

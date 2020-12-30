@@ -3,7 +3,10 @@ package com.centafrique.textsender.Helperclass;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -12,6 +15,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.CallLog;
@@ -25,8 +30,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import com.centafrique.textsender.Activities.PaymentNew;
 import com.centafrique.textsender.Database.DatabaseHelper;
 import com.centafrique.textsender.R;
 import com.centafrique.textsender.SMSUtils;
@@ -157,59 +164,20 @@ public class CallReceiver extends BroadcastReceiver {
                                 cur1.moveToFirst();
 
                                 String lastCallnumber = cur.getString(0);
-                                String lastCall = cur1.getString(0);
-//
-//                                Log.e("-*-*-*lastCallnumber ", lastCallnumber);
-//                                Log.e("-*-*-*lastCall ", lastCall);
+                                String lastCall = "";
+
+                                if (cur1.getString(0) != null){
+                                    lastCall = cur1.getString(0);
+                                }else {
+                                    lastCall = "";
+                                }
+
+
+                                Log.e("*-*-*-number ", lastCallnumber);
+                                Log.e("*-*-*-name ", lastCall);
 
 
                                 if (lastCallnumber != null){
-
-//                                    ContentResolver cr = context.getContentResolver();
-//                                    Cursor cur1 = cr.query(ContactsContract.Contacts.CONTENT_URI,
-//                                            null, null, null, null);
-//
-//                                    if ((cur1 != null ? cur1.getCount() : 0) > 0) {
-//                                        while (cur1 != null && cur1.moveToNext()) {
-//                                            String id = cur1.getString(
-//                                                    cur1.getColumnIndex(ContactsContract.Contacts._ID));
-//                                            String name = cur1.getString(cur1.getColumnIndex(
-//                                                    ContactsContract.Contacts.DISPLAY_NAME));
-//
-//                                            if (cur1.getInt(cur1.getColumnIndex(
-//                                                    ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-//                                                Cursor pCur = cr.query(
-//                                                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-//                                                        null,
-//                                                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-//                                                        new String[]{id}, null);
-//                                                while (pCur.moveToNext()) {
-//                                                    String phoneNo = pCur.getString(pCur.getColumnIndex(
-//                                                            ContactsContract.CommonDataKinds.Phone.NUMBER));
-//
-//                                                    Log.e("-*-*-*all ", phoneNo);
-//
-//                                                    if (lastCallnumber.equals(phoneNo)){
-//
-//                                                        Log.e("-*-*-*Yes ", name);
-//
-//                                                    }else {
-//
-//                                                        Log.e("-*-*-*No ", lastCallnumber);
-//
-//                                                    }
-//
-//
-////                                                    databaseHelper.addContacts(phoneNo, name);
-//
-//                                                }
-//                                                pCur.close();
-//                                            }
-//                                        }
-//                                    }
-//                                    if(cur1!=null){
-//                                        cur1.close();
-//                                    }
 
                                     try{
 
@@ -228,11 +196,11 @@ public class CallReceiver extends BroadcastReceiver {
                                             String txtMessage = fetchDatabase.getMessage(context);
                                             if (txtMessage.equals("false")){
 
-                                                txtToSend = context.getString(R.string.send_text_default) + "\nIdleTexter Info: "+tag;
+                                                txtToSend = context.getString(R.string.send_text_default) + "\n \nIdleTexter Info: "+tag;
 
                                             }else {
 
-                                                txtToSend = txtMessage +  "\nIdleTexter Info: "+tag;
+                                                txtToSend = txtMessage +  "\n \nIdleTexter Info: "+tag;
 
                                             }
 
@@ -265,6 +233,8 @@ public class CallReceiver extends BroadcastReceiver {
                                             }
 
                                         }else{
+
+                                            addNotification(context);
 
                                             Toast.makeText(context, "Call the mobile developer for more details", Toast.LENGTH_LONG).show();
 
@@ -306,5 +276,57 @@ public class CallReceiver extends BroadcastReceiver {
         lastState = state;
     }
 
+    private void addNotification(Context context) {
+
+        Log.e("-*-*-**xxx ", "123");
+
+        int NOTIFICATION_ID = Integer.parseInt("1");
+        String CHANNEL_ID = "my_channel_01";
+        CharSequence name = "my_channel";
+        String description = "This is my channel";
+        String txtTitle = "Idle Texter";
+
+        NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            channel.enableLights(true);
+            channel.setLightColor(Color.RED);
+            channel.enableVibration(true);
+            channel.setVibrationPattern(new long[]{100,200,300,400,500,400,300,200,400});
+            channel.setShowBadge(false);
+            assert notificationManager != null;
+            notificationManager.createNotificationChannel(channel);
+
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+
+            builder.setSmallIcon(R.mipmap.ic_icon_logo);
+
+        }else {
+
+            builder.setSmallIcon(R.mipmap.ic_icon_logo);
+        }
+
+        builder.setContentTitle(txtTitle);
+        builder.setContentText("You have exhausted your sms plan.\nGo to the payment page to get more plans.");
+
+        Intent intent = new Intent(context, PaymentNew.class);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addParentStack(PaymentNew.class);
+        stackBuilder.addNextIntent(intent);
+
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
+        assert notificationManager != null;
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
+
+    }
 
 }

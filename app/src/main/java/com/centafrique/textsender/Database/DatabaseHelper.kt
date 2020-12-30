@@ -90,6 +90,8 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, 
         contentValues.put(KEY_TIME, time)
         contentValues.put(KEY_NUMBER_CALLS, "1")
 
+        Log.e("-*-*- ", number)
+
         db.insert(TABLE_MISSED_CALLS, null, contentValues)
         db.close()
 

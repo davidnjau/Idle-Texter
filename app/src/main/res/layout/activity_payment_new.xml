@@ -103,7 +103,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:visibility="gone"
                 android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:background="@drawable/outline"

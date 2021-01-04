@@ -172,7 +172,7 @@ class PaymentNew : AppCompatActivity(), RewardedVideoAdListener {
 
         val lipaNaMpesa = LipaNaMpesa(newNumber,
                 "$plan",
-                "ZGF2aWxsYW1pbG5lckBnbWFpbC5jb205cWJRRGFKaHBHQ0F3OTVNTjVxZ3pjVEdQQVdNUXhRSTAuNTU1NjI4MDAgMTYwNDk5OTA0Mw==",
+                "WTd3ekY5ZUQ5REE1eDluTGZ0amdOb1UyYXZ2V3o5TkRicmlhbm1va2FuZHUzNUBnbWFpbC5jb20wLjgwODMyNDAwIDE2MDgxMjgyNTc=",
                 amnt.toString(),
                 "IDT")
 
@@ -241,7 +241,7 @@ class PaymentNew : AppCompatActivity(), RewardedVideoAdListener {
 
     fun loadToken() {
 
-        val userLogin = UserLogin("davillamilner@gmail.com", "123456789")
+        val userLogin = UserLogin("brianmokandu35@gmail.com", "ngojakiasi")
 
         val call : Call<TokenResponse> = apiInterface1.getAccessLiveToken(userLogin)
         call.enqueue(object: Callback<TokenResponse> {
@@ -282,7 +282,7 @@ class PaymentNew : AppCompatActivity(), RewardedVideoAdListener {
     }
     override fun onRewarded(p0: RewardItem?) {
 
-        var smsNew = 1
+        var smsNew = 20
         var smsTotal: Int
 
         val sms = sharedPreferences.getString("sms", null)

@@ -4,27 +4,31 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import com.centafrique.textsender.Helperclass.CustomDialogMessage
+import com.centafrique.textsender.Helperclass.ShowMessage
 import com.centafrique.textsender.R
 import com.centafrique.textsender.mpesa.*
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.*
 import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
+import kotlinx.android.synthetic.main.activity_payment.*
+import kotlinx.android.synthetic.main.activity_payment_new.*
+import kotlinx.android.synthetic.main.activity_payment_new.adView
 import kotlinx.coroutines.*
 import net.cachapa.expandablelayout.ExpandableLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.HashMap
+import java.util.*
 
-class PaymentNew : AppCompatActivity(), RewardedVideoAdListener {
+class PaymentNew : AppCompatActivity(), RewardedVideoAdListener{
 
     private lateinit var btnActivatePlan: Button
     private var paymentMethod = ""
@@ -41,9 +45,28 @@ class PaymentNew : AppCompatActivity(), RewardedVideoAdListener {
     private lateinit var expanded_menu_payment : ExpandableLayout
     private lateinit var expanded_menu_add : ExpandableLayout
 
+    private lateinit var mInterstitialAd: InterstitialAd
+
+    private var liveRewardVideo = "ca-app-pub-2341333181404752/7164436318"
+    private var testRewardVideo = "ca-app-pub-3940256099942544/5224354917"
+
+    private var liveInterstitialAd = "ca-app-pub-2341333181404752/7889707501"
+    private var testInterstitialAd = "ca-app-pub-3940256099942544/1033173712"
+
+    private var isLiveReward = false
+
+    private var isInterstitialAdLoaded = false
+    private var isInterstitialAdOpened = false
+    private var isInterstitialAdClicked = false
+    private var isInterstitialAdClosed = false
+
+    private var rewardIntestial = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_new)
+
+//        setAdId(liveInterstitialAd)
 
         stringStringMap = HashMap()
         btnActivatePlan = findViewById(R.id.btnActivatePlan)
@@ -84,7 +107,10 @@ class PaymentNew : AppCompatActivity(), RewardedVideoAdListener {
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this)
         mRewardedVideoAd.rewardedVideoAdListener = this
 
-        loadRewardVideo()
+//        loadRewardVideo()
+
+
+        loadInterstitialAdd()
 
         btnActivatePlan.setOnClickListener {
 
@@ -104,11 +130,11 @@ class PaymentNew : AppCompatActivity(), RewardedVideoAdListener {
 
         findViewById<Button>(R.id.btnViewAdd).setOnClickListener {
 
-            if (mRewardedVideoAd.isLoaded) {
-                mRewardedVideoAd.show()
+            if (mInterstitialAd.isLoaded) {
+                mInterstitialAd.show()
             }else {
                 progressDialog.setTitle("Please wait..")
-                progressDialog.setMessage("Processing payment..")
+                progressDialog.setMessage("Processing advert..")
                 progressDialog.setCanceledOnTouchOutside(false)
 
                 progressDialog.show()
@@ -118,12 +144,13 @@ class PaymentNew : AppCompatActivity(), RewardedVideoAdListener {
                     val job = Job()
                     CoroutineScope(Dispatchers.IO + job).launch {
 
-                        loadRewardVideo()
+                        loadInterstitialAdd()
+//                        loadRewardVideo()
                         delay(3000)
 
                     }.join()
-                    if (mRewardedVideoAd.isLoaded) {
-                        mRewardedVideoAd.show()
+                    if (mInterstitialAd.isLoaded) {
+                        mInterstitialAd.show()
                         progressDialog.dismiss()
 
                     }
@@ -133,15 +160,135 @@ class PaymentNew : AppCompatActivity(), RewardedVideoAdListener {
             }
         }
 
+        mInterstitialAd.adListener = object :AdListener(){
+
+            override fun onAdLoaded() {
+                super.onAdLoaded()
+
+                Log.e("-*-*-* ", "-*-*-*-")
+            }
+
+            override fun onAdClosed() {
+                super.onAdClosed()
+
+                CoroutineScope(Dispatchers.IO).launch {
+
+                    rewardItem1(10, "")
+                }
+
+            }
+
+            override fun onAdClicked() {
+                super.onAdClicked()
+
+                CoroutineScope(Dispatchers.IO).launch {
+
+                    rewardItem1(15, "")
+                }
+            }
+
+            override fun onAdFailedToLoad(error: LoadAdError?) {
+                super.onAdFailedToLoad(error)
+
+                if (error != null) {
+                    Log.e("-*-*domain ", error.domain.toString())
+                    Log.e("-*-*code ", error.code.toString())
+                    Log.e("-*-*message ", error.message.toString())
+                    Log.e("-*-*responseInfo ", error.cause.toString())
+                    Log.e("-*-*cause ", error.cause.toString())
+
+                    CustomDialogMessage(this@PaymentNew, error.code.toString())
+
+                }
+
+                progressDialog.dismiss()
+            }
+
+        }
+
+//        mInterstitialAd.adListener = object: AdListener() {
+//            override fun onAdLoaded() {
+//                isInterstitialAdLoaded = true
+//                rewardInterstitialItem()
+//            }
+//
+//            override fun onAdFailedToLoad(adError: LoadAdError) {
+//                // Code to be executed when an ad request fails.
+//            }
+//
+//            override fun onAdOpened() {
+//                // Code to be executed when the ad is displayed.
+//                isInterstitialAdOpened = true
+//                rewardInterstitialItem()
+//            }
+//
+//            override fun onAdClicked() {
+//                // Code to be executed when the user clicks on an ad.
+//                isInterstitialAdClicked = true
+//                rewardInterstitialItem()
+//            }
+//
+//            override fun onAdLeftApplication() {
+//                // Code to be executed when the user has left the app.
+//            }
+//
+//            override fun onAdClosed() {
+//                isInterstitialAdClosed = true
+//                rewardInterstitialItem()
+//            }
+//
+//
+//        }
+
+
+    }
+
+    private fun rewardInterstitialItem() {
+
+        when {
+            isInterstitialAdLoaded -> {
+                rewardIntestial += 10
+            }
+            isInterstitialAdClicked -> {
+                rewardIntestial += 15
+            }
+            isInterstitialAdClosed -> {
+                rewardIntestial += 10
+            }
+            isInterstitialAdOpened -> {
+                rewardIntestial += 15
+            }
+        }
+
+        rewardItem(rewardIntestial, "")
+
+
+    }
+
+    private fun setAdId(adId: String) {
+        adView.adUnitId = adId
+
+        if (adId == liveRewardVideo) isLiveReward = true
+
+    }
+
+    fun loadInterstitialAdd() {
+
+        MobileAds.initialize(this@PaymentNew)
+        val adRequest = AdRequest.Builder().build()
+        CoroutineScope(Dispatchers.Main).async { adView.loadAd(adRequest) }
+
+        mInterstitialAd = InterstitialAd(this@PaymentNew)
+        mInterstitialAd.adUnitId = liveInterstitialAd //For now use testInterstitial Ad id
+        CoroutineScope(Dispatchers.Main).async { mInterstitialAd.loadAd(AdRequest.Builder().build()) }
+
+
     }
 
     private fun loadRewardVideo() {
 
-        val addId = "ca-app-pub-3940256099942544/5224354917" //Test add
-//        val addId = "ca-app-pub-2341333181404752/7164436318" //Live add
-
         CoroutineScope(Dispatchers.Main).launch {
-            mRewardedVideoAd.loadAd(addId, AdRequest.Builder().build())
+            mRewardedVideoAd.loadAd(testRewardVideo, AdRequest.Builder().build())
 
         }
 
@@ -279,31 +426,18 @@ class PaymentNew : AppCompatActivity(), RewardedVideoAdListener {
     }
     override fun onRewardedVideoAdFailedToLoad(p0: Int) {
         Toast.makeText(this, "Video not loaded. You cannot get the sms plan if you've not watched the video ", Toast.LENGTH_SHORT).show()
+
+        setAdId(liveInterstitialAd)
+        if (mInterstitialAd.isLoaded){
+            mInterstitialAd.show()
+        }
+
     }
     override fun onRewarded(p0: RewardItem?) {
 
-        var smsNew = 1
-        var smsTotal: Int
-
-        val sms = sharedPreferences.getString("sms", null)
-        if (sms != null) {
-            smsTotal = sms.toInt() + smsNew
-            editor.putString("sms", "$smsTotal")
-        }else{
-            editor.putString("sms", "$smsNew")
-        }
-        editor.apply()
-
-
-        val intent = Intent(this@PaymentNew, Main2Activity::class.java)
-        startActivity(intent)
-        finish()
-
-        Toast.makeText(this, "The application will send 20 sms.", Toast.LENGTH_SHORT).show()
-
+        rewardItem(20, "")
 
     }
-
 
     override fun onRewardedVideoAdLoaded() {
 
@@ -314,8 +448,63 @@ class PaymentNew : AppCompatActivity(), RewardedVideoAdListener {
     override fun onRewardedVideoCompleted() {
 
     }
-
     override fun onRewardedVideoStarted() {
+
+    }
+
+    //Interstitial Ad
+
+    //Dynamic toast
+    fun customMessage(message: String){
+
+        ShowMessage(this@PaymentNew, message)
+
+    }
+
+    private fun rewardItem(smsNew: Int, additionalMessage: String) {
+
+        var smsTotal: Int
+        val sms = sharedPreferences.getString("sms", null)
+        if (sms != null) {
+            smsTotal = sms.toInt() + smsNew
+            editor.putString("sms", "$smsTotal")
+        }else{
+            editor.putString("sms", "$smsNew")
+        }
+        editor.apply()
+
+        customMessage("The application will send $smsNew messages. ")
+
+        val intent = Intent(this@PaymentNew, Main2Activity::class.java)
+        startActivity(intent)
+        finish()
+
+
+    }
+    suspend fun rewardItem1(smsNew: Int, additionalMessage: String) {
+
+        var smsTotal: Int
+        val job = Job()
+        CoroutineScope(Dispatchers.IO + job).launch {
+
+            val sms = sharedPreferences.getString("sms", null)
+            if (sms != null) {
+                smsTotal = sms.toInt() + smsNew
+                editor.putString("sms", "$smsTotal")
+            } else {
+                editor.putString("sms", "$smsNew")
+            }
+            editor.apply()
+            delay(1000)
+        }.join()
+
+        CoroutineScope(Dispatchers.Main).launch {
+            customMessage("The application will send $smsNew messages. ")
+
+            val intent = Intent(this@PaymentNew, Main2Activity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
     }
 

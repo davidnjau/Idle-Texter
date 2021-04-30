@@ -60,7 +60,7 @@ class FetchDatabase {
         databaseHelper.updateStatus("true", messageId)
 
         val db = databaseHelper.readableDatabase
-        val cursor: Cursor = db.rawQuery("select * from " + "${DatabaseHelper.TABLE_MESSAGES}", null)
+        val cursor: Cursor = db.rawQuery("select * from " + DatabaseHelper.TABLE_MESSAGES, null)
 
         if (cursor != null){
 

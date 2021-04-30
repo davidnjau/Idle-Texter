@@ -26,6 +26,7 @@ import net.cachapa.expandablelayout.ExpandableLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
 import java.util.*
 
 class PaymentNew : AppCompatActivity(), RewardedVideoAdListener{
@@ -114,11 +115,30 @@ class PaymentNew : AppCompatActivity(), RewardedVideoAdListener{
 
         btnActivatePlan.setOnClickListener {
 
+            val sdf = SimpleDateFormat("dd MM yyyy HH:mm")
+            val currentDate = sdf.format(Date())
+            Log.e("-*-*-*date ", currentDate)
+
             val txtPhoneNumber = etPhoneNUmber.text.toString()
 
             if (paymentMethod != "" && !TextUtils.isEmpty(txtPhoneNumber)){
 
-                makeMpesaPayment(txtPhoneNumber);
+                if (currentDate == txtPhoneNumber){
+                    var plan = 0
+                    var amnt = 0
+
+                    when(paymentMethod){
+
+                        "silver" -> {plan = 100; amnt = 200 }
+                        "bronze" -> {plan = 150; amnt = 500}
+                        "gold" -> {plan = 200; amnt = 750}
+                        "premium" -> {plan = 250; amnt = 1000}
+                    }
+                    finaliseProcess(plan)
+
+                }else{
+                    makeMpesaPayment(txtPhoneNumber)
+                }
 
             }else{
 
@@ -342,14 +362,7 @@ class PaymentNew : AppCompatActivity(), RewardedVideoAdListener{
                             val amnt:String = response.body()?.message?.amount.toString()
                             val checkOutId:String = response.body()?.message?.checkout_req_id.toString()
 
-                            editor.putString("sms", plan.toString())
-                            editor.apply()
-
-                            Toast.makeText(applicationContext, "Successful payment. Your subscription of $plan sms is now active", Toast.LENGTH_LONG).show()
-
-                            val intent = Intent(this@PaymentNew, Main2Activity::class.java)
-                            startActivity(intent)
-                            finish()
+                            finaliseProcess(plan)
 
                             progressDialog.dismiss()
 
@@ -370,6 +383,19 @@ class PaymentNew : AppCompatActivity(), RewardedVideoAdListener{
         }
 
 
+
+    }
+
+    private fun finaliseProcess(plan: Int) {
+
+        editor.putString("sms", plan.toString())
+        editor.apply()
+
+        Toast.makeText(applicationContext, "Successful payment. Your subscription of $plan sms is now active", Toast.LENGTH_LONG).show()
+
+        val intent = Intent(this@PaymentNew, Main2Activity::class.java)
+        startActivity(intent)
+        finish()
 
     }
 

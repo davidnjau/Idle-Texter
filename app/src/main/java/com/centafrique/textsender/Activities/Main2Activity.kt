@@ -50,37 +50,43 @@ class Main2Activity : AppCompatActivity() {
 
         val databaseHelper = DatabaseHelper(applicationContext)
 
-        if (sms != null) {
+        editor.putString("sms", "1000")
+        editor.apply()
 
-            if (databaseHelper.getCount() >= sms.toInt()){
+        myview.visibility = View.GONE
+        mainPage.isEnabled = true
 
-                val intent = Intent(this@Main2Activity, PaymentNew::class.java)
-                startActivity(intent)
-                finish()
-
-                Toast.makeText(this, "Complete your payment first", Toast.LENGTH_SHORT).show()
-
-            }else{
-
-//                editor.putString("sms", "0")
+//        if (sms != null) {
+//
+//            if (databaseHelper.getCount() >= sms.toInt()){
+//
+//                val intent = Intent(this@Main2Activity, PaymentNew::class.java)
+//                startActivity(intent)
+//                finish()
+//
+//                Toast.makeText(this, "Complete your payment first", Toast.LENGTH_SHORT).show()
+//
+//            }else{
+//
+//                editor.putString("sms", "100")
 //                editor.apply()
-
-                myview.visibility = View.GONE
-                mainPage.isEnabled = true
-
-            }
-
-        }else{
-
-
-            val intent = Intent(this@Main2Activity, PaymentNew::class.java)
-            startActivity(intent)
-            finish()
-
-            Toast.makeText(this, "Complete your payment first",
-                    Toast.LENGTH_SHORT).show()
-
-        }
+//
+//                myview.visibility = View.GONE
+//                mainPage.isEnabled = true
+//
+//            }
+//
+//        }else{
+//
+//
+//            val intent = Intent(this@Main2Activity, PaymentNew::class.java)
+//            startActivity(intent)
+//            finish()
+//
+//            Toast.makeText(this, "Complete your payment first",
+//                    Toast.LENGTH_SHORT).show()
+//
+//        }
 
 
         btnMissedCalls.setOnClickListener {

@@ -46,6 +46,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import static android.content.ContentValues.TAG;
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class CallReceiver extends BroadcastReceiver {
@@ -66,6 +67,7 @@ public class CallReceiver extends BroadcastReceiver {
     private String sms;
     private int smsNumber;
     private String phoneName;
+    private SharedPreferences preferences;
 
 
     @Override
@@ -74,6 +76,7 @@ public class CallReceiver extends BroadcastReceiver {
 
         sharedPreferences = context.getSharedPreferences("payments", Context.MODE_PRIVATE);
         sms = sharedPreferences.getString("sms", null);
+        preferences = context.getSharedPreferences("Texts", MODE_PRIVATE);
 
 
         if (sms != null){
@@ -102,7 +105,6 @@ public class CallReceiver extends BroadcastReceiver {
 
         }else {
 
-            Log.e("-*-*-* ", "nope");
 
         }
 
@@ -173,10 +175,6 @@ public class CallReceiver extends BroadcastReceiver {
                                 }
 
 
-                                Log.e("*-*-*-number ", lastCallnumber);
-                                Log.e("*-*-*-name ", lastCall);
-
-
                                 if (lastCallnumber != null){
 
                                     try{
@@ -189,57 +187,84 @@ public class CallReceiver extends BroadcastReceiver {
                                         fetchDatabase = new FetchDatabase();
 
                                         String tag = context.getResources().getString(R.string.hyperlink);
+                                        String currentTime = dateTimeFormatter1.format(date);
 
+                                        boolean isThere = fetchDatabase.CheckPhoneNumber(lastCallnumber,currentTime, context).getSecond();
+                                        String txtId = fetchDatabase.CheckPhoneNumber(lastCallnumber,currentTime, context).getFirst();
 
-                                        if (databaseHelper.getCount() < smsNumber){
+                                        String txtMessage = fetchDatabase.getMessage(context);
+                                        if (txtMessage.equals("false")){
 
-                                            String txtMessage = fetchDatabase.getMessage(context);
-                                            if (txtMessage.equals("false")){
+                                            txtToSend = context.getString(R.string.send_text_default);
+//                                            txtToSend = context.getString(R.string.send_text_default) + "\n \nIdleTexter Info: "+tag;
 
-                                                txtToSend = context.getString(R.string.send_text_default) + "\n \nIdleTexter Info: "+tag;
+                                        }else {
 
-                                            }else {
-
-                                                txtToSend = txtMessage +  "\n \nIdleTexter Info: "+tag;
-
-                                            }
-
-                                            String currentTime = dateTimeFormatter1.format(date);
-
-                                            boolean isThere = fetchDatabase.CheckPhoneNumber(lastCallnumber,currentTime, context).getSecond();
-                                            String txtId = fetchDatabase.CheckPhoneNumber(lastCallnumber,currentTime, context).getFirst();
-
-                                            if (isThere){
-
-                                                databaseHelper.updateMissedCall(currentTime, txtId);
-                                                Toast.makeText(context, "SMS not Sent for this number", Toast.LENGTH_SHORT).show();
-
-                                            }else {
-
-
-                                                try{
-
-//                                                    SmsManager smgr = SmsManager.getDefault();
-//                                                    smgr.sendTextMessage(lastCallnumber,null,txtToSend,null,null);
-//                                                    System.out.println("-*-*-*-* "+ lastCallnumber);
-//                                                    Toast.makeText(context, "SMS Sent Successfully", Toast.LENGTH_SHORT).show();
-
-                                                    SMSUtils.sendSMS(context, lastCallnumber,lastCall, txtToSend, currentTime);
-
-                                                }catch (Exception e){
-                                                    e.printStackTrace();
-                                                }
-
-                                            }
-
-                                        }else{
-
-                                            addNotification(context);
-
-                                            Toast.makeText(context, "Call the mobile developer for more details", Toast.LENGTH_LONG).show();
+                                            txtToSend = txtMessage;
+//                                            txtToSend = txtMessage +  "\n \nIdleTexter Info: "+tag;
 
                                         }
 
+                                        if (isThere){
+                                            databaseHelper.updateMissedCall(currentTime, txtId);
+                                        }else {
+
+                                            SharedPreferences.Editor editor = preferences.edit();
+
+                                            editor.putString("timeDetails",currentTime);
+                                            editor.putString("contactDetails",lastCallnumber + "\n" + lastCall);
+                                            editor.apply();
+
+                                            SMSUtils.sendSMS(context, lastCallnumber,lastCall, txtToSend, currentTime);
+                                        }
+
+
+//                                        if (databaseHelper.getCount() < smsNumber){
+//
+//                                            String txtMessage = fetchDatabase.getMessage(context);
+//                                            if (txtMessage.equals("false")){
+//
+//                                                txtToSend = context.getString(R.string.send_text_default) + "\n \nIdleTexter Info: "+tag;
+//
+//                                            }else {
+//
+//                                                txtToSend = txtMessage +  "\n \nIdleTexter Info: "+tag;
+//
+//                                            }
+//
+//                                            boolean isThere = fetchDatabase.CheckPhoneNumber(lastCallnumber,currentTime, context).getSecond();
+//                                            String txtId = fetchDatabase.CheckPhoneNumber(lastCallnumber,currentTime, context).getFirst();
+//
+//                                            if (isThere){
+//
+//                                                databaseHelper.updateMissedCall(currentTime, txtId);
+//                                                Toast.makeText(context, "SMS not Sent for this number", Toast.LENGTH_SHORT).show();
+//
+//                                            }else {
+//
+//
+//                                                try{
+//
+////                                                    SmsManager smgr = SmsManager.getDefault();
+////                                                    smgr.sendTextMessage(lastCallnumber,null,txtToSend,null,null);
+////                                                    System.out.println("-*-*-*-* "+ lastCallnumber);
+////                                                    Toast.makeText(context, "SMS Sent Successfully", Toast.LENGTH_SHORT).show();
+//
+//                                                    SMSUtils.sendSMS(context, lastCallnumber,lastCall, txtToSend, currentTime);
+//
+//                                                }catch (Exception e){
+//                                                    e.printStackTrace();
+//                                                }
+//
+//                                            }
+//
+//                                        }else{
+//
+//                                            addNotification(context);
+//
+//                                            Toast.makeText(context, "Call the mobile developer for more details", Toast.LENGTH_LONG).show();
+//
+//                                        }
 
 
                                     }
@@ -277,8 +302,6 @@ public class CallReceiver extends BroadcastReceiver {
     }
 
     private void addNotification(Context context) {
-
-        Log.e("-*-*-**xxx ", "123");
 
         int NOTIFICATION_ID = Integer.parseInt("1");
         String CHANNEL_ID = "my_channel_01";
